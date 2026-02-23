@@ -1,0 +1,9 @@
+/* your elemental power is GREEEENNNNNNN*/
+body { background: #1b261e !important; color: #a3b18a !important; }
+#sidebar { background: #2d3a30 !important; border-right: 1px solid #3e4c3f !important; }
+.CodeMirror { background: #1b261e !important; color: #a3b18a !important; }
+.editor-toolbar { background: #344e41 !important; }
+.file-active { background: #588157 !important; }
+button { background: #3a5a40 !important; }
+/* On force le curseur en vert clair pour ce thème */
+.CodeMirror-cursor { border-left: 2px solid #dad7cd !important; visibility: visible !important; }
