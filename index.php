@@ -7,21 +7,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <link id="theme-link" rel="stylesheet" href="">
-
     <style>
-        /* ANIMATIONS */
         @keyframes boing { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
         .fade-out { opacity: 0; transition: opacity 0.8s ease-out; pointer-events: none; }
-
-        /* BASE & COULEURS DYNAMIQUES */
         body { display: flex; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; overflow: hidden; }
-        
         body.theme-dark { background: #1e1e1e; color: #d4d4d4; }
         body.theme-dark #sidebar { background: #252526; border-right: 1px solid #333; }
         body.theme-dark .file-item { color: #d4d4d4; }
         body.theme-dark .folder { color: #888; }
         body.theme-dark #help-modal { background: #252526; color: #d4d4d4; border-color: #444; }
-
         body.theme-light { background: #ffffff; color: #1e1e1e; }
         body.theme-light #sidebar { background: #f3f3f3; border-right: 1px solid #ccc; }
         body.theme-light .file-item { color: #1e1e1e; }
@@ -29,41 +23,23 @@
         body.theme-light .sidebar-brand { color: #005fb8; }
         body.theme-light .sidebar-footer { border-top: 1px solid #ccc; color: #1e1e1e; }
         body.theme-light #help-modal { background: #ffffff; color: #1e1e1e; border-color: #ccc; }
-
-        /* SPLASH SCREEN */
         #splash { position: fixed; top:0; left:0; width:100%; height:100%; background: #1e1e1e; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         .logo-splash { width: 100px; height: 100px; object-fit: contain; margin-bottom: 20px; animation: boing 2.5s infinite ease-in-out; }
-
-        /* SIDEBAR */
         #sidebar { width: 300px; display: flex; flex-direction: column; justify-content: space-between; z-index: 10; }
         .sidebar-brand { padding: 15px; font-size: 1.1rem; font-weight: bold; color: #007acc; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; align-items: center; gap: 10px; }
         .sidebar-header { padding: 15px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; flex-direction: column; gap: 8px; }
         #file-tree { flex: 1; overflow-y: auto; padding: 10px; }
-        
-        /* FOOTER SIDEBAR */
         .sidebar-footer { padding: 12px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(128,128,128,0.2); }
         .github-link a { color: inherit; opacity: 0.7; text-decoration: none; font-size: 12px; transition: opacity 0.2s; display: flex; align-items: center; gap: 5px; }
         .github-link a:hover { opacity: 1; }
         .help-btn { background: #007acc; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; font-weight: bold; }
-
-        /* MODAL D'AIDE */
         #help-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 25px; border-radius: 8px; z-index: 10000; width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border-style: solid; border-width: 1px; }
         #help-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 9999; }
-
-        /* NOTIFICATION */
-        #notif { 
-            position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); 
-            padding: 10px 25px; background: #007acc; color: white; border-radius: 30px; 
-            font-size: 13px; font-weight: bold; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            z-index: 10001; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
+        #notif { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); padding: 10px 25px; background: #007acc; color: white; border-radius: 30px; font-size: 13px; font-weight: bold; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10001; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         #notif.show { transform: translate(-50%, 0); }
-
-        /* EDITOR AREA */
         #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; }
         .editor-toolbar button { color: inherit !important; }
         .CodeMirror { flex: 1; border: none !important; background: transparent !important; color: inherit !important; font-size: 16px; }
-
         button, select { background: rgba(128,128,128,0.2); color: inherit; border: none; padding: 8px; cursor: pointer; border-radius: 4px; }
         .file-item { cursor: pointer; padding: 6px 10px; border-radius: 4px; font-size: 13px; margin-bottom: 2px; }
         .file-active { background: #007acc !important; color: white !important; }
@@ -132,15 +108,15 @@
     <textarea id="my-editor"></textarea>
 </div>
 
-<script src="https://unpkg.com/idb-keyval@6/dist/umd/idb-keyval-iife.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd/idb-keyval-iife.min.js"></script>
 <script>
     let easyMDE, rootHandle, currentFileHandle, autoSaveTimeout;
+    const db = window.idbKeyval || window.idb_keyval;
     const loadingTexts = ["RESTAURATION DE LA SESSION...", "OUVERTURE DU GRIMOIRE...", "CHARGEMENT DE L'UNIVERS..."];
 
     window.onload = async () => {
         document.getElementById('splash-title').innerText = loadingTexts[Math.floor(Math.random() * loadingTexts.length)];
         
-        // 1. Initialisation Editeur
         easyMDE = new EasyMDE({ 
             element: document.getElementById('my-editor'),
             spellChecker: false, autofocus: true, forceSync: true,
@@ -154,25 +130,28 @@
             }
         });
 
-        // 2. Restaurer le Thème
         const savedTheme = localStorage.getItem('obsidian-theme') || 'dark';
         document.getElementById('theme-selector').value = savedTheme;
         changeTheme(savedTheme);
 
-        // 3. Restaurer le Dossier (IndexedDB)
         try {
-            const storedHandle = await idbKeyval.get('root-handle');
-            if (storedHandle) {
-                // On vérifie si on a toujours la permission
-                if (await storedHandle.queryPermission({mode: 'readwrite'}) === 'granted') {
+            if (db) {
+                const storedHandle = await db.get('root-handle');
+                if (storedHandle) {
                     rootHandle = storedHandle;
-                    await renderTree();
-                } else {
-                    // Si pas de permission, on affiche un petit message dans l'arbre
-                    document.getElementById('file-tree').innerHTML = "<div style='font-size:12px; opacity:0.6; text-align:center; margin-top:20px;'>Session expirée.<br>Cliquez sur 'Ouvrir Dossier'.</div>";
+                    const status = await rootHandle.queryPermission({mode: 'readwrite'});
+                    if (status === 'granted') {
+                        await renderTree();
+                    } else {
+                        document.getElementById('file-tree').innerHTML = `
+                            <div style='padding:15px; text-align:center;'>
+                                <p style='font-size:12px; opacity:0.6;'>Accès expiré</p>
+                                <button onclick="verifyPermission()" style="width:100%;">🔓 Réactiver</button>
+                            </div>`;
+                    }
                 }
             }
-        } catch (e) { console.error("Erreur restau dossier", e); }
+        } catch (e) { console.error(e); }
 
         setTimeout(() => {
             document.getElementById('splash').classList.add('fade-out');
@@ -185,11 +164,9 @@
         const link = document.getElementById('theme-link');
         const sLogo = document.getElementById('sidebar-logo');
         const spLogo = document.getElementById('splash-logo');
-        
         body.classList.remove('theme-light', 'theme-dark');
         link.href = "";
         let logoPath = "logos/dark.png";
-
         if (val === "light") {
             body.classList.add('theme-light');
             logoPath = "logos/light.png";
@@ -205,7 +182,6 @@
             body.classList.add('theme-dark');
             logoPath = val.replace('themes/', 'logos/').replace('.css', '.png');
         }
-
         sLogo.src = logoPath;
         spLogo.src = logoPath;
         localStorage.setItem('obsidian-theme', val);
@@ -214,9 +190,15 @@
     async function pickDirectory() {
         try { 
             rootHandle = await window.showDirectoryPicker();
-            await idbKeyval.set('root-handle', rootHandle); // Sauvegarde permanente
-            renderTree(); 
+            if (db) await db.set('root-handle', rootHandle);
+            await renderTree(); 
         } catch (err) {}
+    }
+
+    async function verifyPermission() {
+        if (!rootHandle) return;
+        const status = await rootHandle.requestPermission({mode: 'readwrite'});
+        if (status === 'granted') await renderTree();
     }
 
     async function renderTree() {
