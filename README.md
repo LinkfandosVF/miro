@@ -7,7 +7,7 @@ Cute Markdown note taking app written in php... might compile later idk
 * ✅ Custom logo support
 * ✅ Save and Loaad files.
 * ✅ Folder lookout and read
-* ✅ Syncs when u close the app how cool is that
+* ✅ Syncs theme and settings(soon) when u close the app how cool is that
 * 💠 The REAL logo(s)
 * 💠 README
 * 💠 Publish as a actual app idk how yet
