@@ -5,5 +5,21 @@ body { background: #1b261e !important; color: #a3b18a !important; }
 .editor-toolbar { background: #344e41 !important; }
 .file-active { background: #588157 !important; }
 button { background: #3a5a40 !important; }
-/* On force le curseur en vert clair pour ce thème */
+/* Cursor color in editor */
 .CodeMirror-cursor { border-left: 2px solid #dad7cd !important; visibility: visible !important; }
+
+
+/* L'APERÇU : On le force à être VISIBLE et au-dessus */
+.editor-preview, .editor-preview-side {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 10 !important; /* On passe devant CodeMirror */
+    
+    /* On s'assure qu'il n'est pas caché par défaut quand il est actif */
+    background-color: #1b261e !important; /* Force ton vert pour tester */
+    color: #a3b18a !important;
+    overflow-y: auto;
+}

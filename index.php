@@ -8,7 +8,10 @@
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <link id="theme-link" rel="stylesheet" href="">
     <style>
-        @keyframes boing { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+        /* MODIF 1 : Variable pour le dynamisme */
+        :root { --dynamic-bg: #1e1e1e; }
+
+         @keyframes boing { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
         .fade-out { opacity: 0; transition: opacity 0.8s ease-out; pointer-events: none; }
         body { display: flex; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; overflow: hidden; }
         body.theme-dark { background: #1e1e1e; color: #d4d4d4; }
@@ -24,7 +27,7 @@
         body.theme-light .sidebar-footer { border-top: 1px solid #ccc; color: #1e1e1e; }
         body.theme-light #help-modal { background: #ffffff; color: #1e1e1e; border-color: #ccc; }
         #splash { position: fixed; top:0; left:0; width:100%; height:100%; background: #1e1e1e; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
-        .logo-splash { width: 100px; height: 100px; object-fit: contain; margin-bottom: 20px; animation: boing 2.5s infinite ease-in-out; }
+        .logo-splash { width: 200px; object-fit: contain; margin-bottom: 20px; animation: boing 2.5s infinite ease-in-out; }
         #sidebar { width: 300px; display: flex; flex-direction: column; justify-content: space-between; z-index: 10; }
         .sidebar-brand { padding: 15px; font-size: 1.1rem; font-weight: bold; color: #007acc; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; align-items: center; gap: 10px; }
         .sidebar-header { padding: 15px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; flex-direction: column; gap: 8px; }
@@ -39,12 +42,28 @@
         #notif.show { transform: translate(-50%, 0); }
         #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; }
         .editor-toolbar button { color: inherit !important; }
-        .CodeMirror { flex: 1; border: none !important; background: transparent !important; color: inherit !important; font-size: 16px; }
+        .CodeMirror { flex: 1; border: none !important; background: transparent !important; color: inherit !important; font-size: 16px; height: calc(100vh - 150px) !important; width: 100%;}
         button, select { background: rgba(128,128,128,0.2); color: inherit; border: none; padding: 8px; cursor: pointer; border-radius: 4px; }
         .file-item { cursor: pointer; padding: 6px 10px; border-radius: 4px; font-size: 13px; margin-bottom: 2px; }
         .file-active { background: #007acc !important; color: white !important; }
         .folder { font-weight: bold; margin-top: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-        .fa-columns, .fa-arrows-alt, .editor-preview-side { display: none !important; }
+        #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; position: relative; }
+        .editor-toolbar button { color: inherit !important; }
+        .editor-preview, .editor-preview-side { 
+    background-color: var(--dynamic-bg) !important; 
+    color: inherit !important; 
+    height: 100% !important; /* Prend toute la hauteur du parent */
+    border: none !important;
+    position: absolute !important;
+    top: 0 !important; /* On remonte tout en haut */
+    left: 0 !important; /* On colle à gauche */
+    right: 0 !important; /* On colle à droite */
+    z-index: 10;
+    padding: 15px; /* Petit confort de lecture */
+    box-sizing: border-box;
+} /* Mon dieu c'était relou. */ 
+        .editor-preview *, .editor-preview-side * { color: inherit !important; background-color: transparent !important; }
+        .CodeMirror { background: transparent !important; height: calc(100vh - 150px) !important; flex: 1; border: none !important; color: inherit !important; font-size: 16px; width: 100%; }
     </style>
 </head>
 <body class="theme-dark">
@@ -112,7 +131,7 @@
 <script>
     let easyMDE, rootHandle, currentFileHandle, autoSaveTimeout;
     const db = window.idbKeyval || window.idb_keyval;
-    const loadingTexts = ["RESTAURATION DE LA SESSION...", "OUVERTURE DU GRIMOIRE...", "CHARGEMENT DE L'UNIVERS..."];
+    const loadingTexts = ["RESTAURATION DE LA SESSION...", "OUVERTURE DU GRIMOIRE...", "CHARGEMENT DE L'UNIVERS...", "OUVERTURE DE MIRO...", "ENTRÉE DANS LA PEINTURE...", "RÉCUPÉRATION DE MONOCO..."];
 
     window.onload = async () => {
         document.getElementById('splash-title').innerText = loadingTexts[Math.floor(Math.random() * loadingTexts.length)];
@@ -184,6 +203,13 @@
         }
         sLogo.src = logoPath;
         spLogo.src = logoPath;
+
+        // MODIF 3 : On sniff la couleur du body (même via CSS externe) et on l'injecte dans la variable
+        setTimeout(() => {
+            const bg = window.getComputedStyle(document.body).backgroundColor;
+            document.documentElement.style.setProperty('--dynamic-bg', bg);
+        }, 150);
+
         localStorage.setItem('obsidian-theme', val);
     }
 

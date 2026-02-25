@@ -2,8 +2,6 @@
 
 Cute Markdown note taking app written in php... might compile later idk
 
-only chrome is supported for now so FUCK Y-/j
-
 **TODO:**
 * ✅ Themes support!!
 * ✅ Custom logo support
