@@ -44,6 +44,7 @@
         #notif.show { transform: translate(-50%, 0); }
         #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; }
         .editor-toolbar button { color: inherit !important; }
+        .editor-toolbar {border: none !important;}.CodeMirror {border: none !important;}.EasyMDEContainer { border: none !important;}
         .CodeMirror { flex: 1; border: none !important; background: transparent !important; color: inherit !important; font-size: 16px; height: calc(100vh - 150px) !important; width: 100%;}
         button, select { background: rgba(128,128,128,0.2); color: inherit; border: none; padding: 8px; cursor: pointer; border-radius: 4px; }
         .file-item { cursor: pointer; padding: 6px 10px; border-radius: 4px; font-size: 13px; margin-bottom: 2px; }
@@ -95,7 +96,7 @@
             <img id="sidebar-logo" src="logos/dark.png" style="width:250px; object-fit:contain;" onerror="this.src='logos/dark.png'">
         </div>
         <div class="sidebar-header">
-            <button onclick="pickDirectory()">📁 Ouvrir Dossier</button>
+            <button onclick="pickDirectory()">📁 Ouvrir Un Espace</button>
             <button onclick="createNewFile()">📄 Nouveau Fichier</button>
             <select id="theme-selector" onchange="changeTheme(this.value)">
                     <option value="light">☀️ Clair</option>

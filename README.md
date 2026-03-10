@@ -5,6 +5,10 @@ Cute Markdown note taking app written in php... might compile later idk
 Miro is a very simple note taking app written in php with bits of css and js. It's meant to be (maybe) used daily, for work, school, or just writing some personal things!
 Viscerally, i literally made this during my free time only cause i wanted to keep my Apple notes personal n shit.
 
+Please dont ask how this entierely fits in a single php file.
+
+Lil shoutout to heyy_yulian for sum help :]
+
 ### H0W 2 RVN
 The best way to run miro (for now) is using [mamp](https://www.mamp.info/en/downloads/)!
 Just download the latest build in ***releases***, open mamp, select the folder in which miro is (or paste everything into htdocs) and open localhost on google chrome or edge!
