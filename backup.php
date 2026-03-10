@@ -8,7 +8,9 @@
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <link id="theme-link" rel="stylesheet" href="">
     <style>
+        /* MODIF 1 : Variable pour le dynamisme */
         :root { --dynamic-bg: #1e1e1e; }
+
          @keyframes boing { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
         .fade-out { opacity: 0; transition: opacity 0.8s ease-out; pointer-events: none; }
         body { display: flex; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; overflow: hidden; }
@@ -20,16 +22,12 @@
         body.theme-light .sidebar-footer { border-top: 1px solid #ccc; color: #1e1e1e; }
         body.theme-light #help-modal { background: #ffffff; color: #1e1e1e; border-color: #ccc; }
         body.theme-light .CodeMirror-cursor { border-left: 2px solid #27beff !important; visibility: visible !important; }
-        body.theme-light #ctx-menu { background: #ffffff; border-color: #ccc; }
-        body.theme-light #ctx-menu div { color: #1e1e1e; }
         body.theme-dark { background: #1e1e1e; color: #d4d4d4; }
         body.theme-dark #sidebar { background: #252526; border-right: 1px solid #333; }
         body.theme-dark .file-item { color: #d4d4d4; }
         body.theme-dark .folder { color: #888; }
         body.theme-dark .CodeMirror-cursor { border-left: 2px solid #27beff !important; visibility: visible !important; }
         body.theme-dark #help-modal { background: #252526; color: #d4d4d4; border-color: #444; }
-        body.theme-dark #ctx-menu { background: #252526; border-color: #444; }
-        body.theme-dark #ctx-menu div { color: #d4d4d4; }
         #splash { position: fixed; top:0; left:0; width:100%; height:100%; background: #1e1e1e; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         .logo-splash { width: 200px; object-fit: contain; margin-bottom: 20px; animation: boing 2.5s infinite ease-in-out; }
         #sidebar { width: 300px; display: flex; flex-direction: column; justify-content: space-between; z-index: 10; }
@@ -44,25 +42,33 @@
         #help-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 9999; }
         #notif { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); padding: 10px 25px; background: #007acc; color: white; border-radius: 30px; font-size: 13px; font-weight: bold; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10001; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         #notif.show { transform: translate(-50%, 0); }
-        #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; position: relative; min-width: 0; }
+        #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; }
         .editor-toolbar button { color: inherit !important; }
         .editor-toolbar {border: none !important;}.CodeMirror {border: none !important;}.EasyMDEContainer { border: none !important;}
-        .CodeMirror { background: transparent !important; height: calc(100vh - 150px) !important; flex: 1; border: none !important; color: inherit !important; font-size: 16px; width: 100%; }
+        .CodeMirror { flex: 1; border: none !important; background: transparent !important; color: inherit !important; font-size: 16px; height: calc(100vh - 150px) !important; width: 100%;}
         button, select { background: rgba(128,128,128,0.2); color: inherit; border: none; padding: 8px; cursor: pointer; border-radius: 4px; }
         .file-item { cursor: pointer; padding: 6px 10px; border-radius: 4px; font-size: 13px; margin-bottom: 2px; }
-        .file-item:hover { background: rgba(128,128,128,0.1); }
         .file-active { background: #007acc !important; color: white !important; }
-        .folder { font-weight: bold; margin-top: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 4px; border-radius: 4px; }
-        .folder:hover { background: rgba(128,128,128,0.1); }
-        .folder.drag-over { background: rgba(0, 122, 204, 0.3); border: 1px dashed #007acc; }
+        .folder { font-weight: bold; margin-top: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; position: relative; }
+        .editor-toolbar button { color: inherit !important; }
         .CodeMirror-wrap pre.CodeMirror-line {word-break: break-all; overflow-wrap: break-word;}
-        .editor-preview, .editor-preview-side { background-color: var(--dynamic-bg) !important; color: inherit !important; height: 100% !important; border: none !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; z-index: 10; padding: 15px; box-sizing: border-box; }
+        #editor-container {min-width: 0; }
+        .editor-preview, .editor-preview-side { 
+    background-color: var(--dynamic-bg) !important; 
+    color: inherit !important; 
+    height: 100% !important; /* Prend toute la hauteur du parent */
+    border: none !important;
+    position: absolute !important;
+    top: 0 !important; /* On remonte tout en haut */
+    left: 0 !important; /* On colle à gauche */
+    right: 0 !important; /* On colle à droite */
+    z-index: 10;
+    padding: 15px; /* Petit confort de lecture */
+    box-sizing: border-box;
+} /* Mon dieu c'était relou. */ 
         .editor-preview *, .editor-preview-side * { color: inherit !important; background-color: transparent !important; }
-        #ctx-menu { display: none; position: fixed; border: 1px solid; border-radius: 6px; z-index: 10002; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 13px; font-weight: bold; overflow: hidden; }
-        #ctx-menu div { padding: 8px 12px; cursor: pointer; }
-        #ctx-menu div:hover { background: #007acc; color: white; }
-        #ctx-delete { color: #ff4d4d !important; }
-        #ctx-delete:hover { background: #ff4d4d !important; color: white !important; }
+        .CodeMirror { background: transparent !important; height: calc(100vh - 150px) !important; flex: 1; border: none !important; color: inherit !important; font-size: 16px; width: 100%; }
     </style>
 </head>
 <body class="theme-dark">
@@ -83,10 +89,6 @@
 </div>
 
 <div id="notif">Saving...</div>
-<div id="ctx-menu">
-    <div id="ctx-rename">✏️ Renommer</div>
-    <div id="ctx-delete">🗑️ Supprimer</div>
-</div>
 
 <div id="sidebar">
     <div>
@@ -94,12 +96,12 @@
             <img id="sidebar-logo" src="logos/dark.png" style="width:250px; object-fit:contain;" onerror="this.src='logos/dark.png'">
         </div>
         <div class="sidebar-header">
-            <button id="btn-open-dir" onclick="pickDirectory()">📁 Ouvrir Un Espace</button>
+            <button onclick="pickDirectory()">📁 Ouvrir Un Espace</button>
             <button onclick="createNewFile()">📄 Nouveau Fichier</button>
             <button onclick="createNewFolder()">📂 Nouveau Dossier</button>
             <select id="theme-selector" onchange="changeTheme(this.value)">
                     <option value="light">☀️ Clair</option>
-                    <option value="auto">🌓 Auto</option>  
+                    <option value="auto">🌓 Auto</option>    
                     <option value="dark">🌙 Sombre</option>
                 <optgroup label="Thèmes Officiels">
                     <?php foreach(glob('themes/official/*.css') as $t) echo "<option value='$t'>⭐ ".basename($t, '.css')."</option>"; ?>
@@ -134,9 +136,6 @@
 <script src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd/idb-keyval-iife.min.js"></script>
 <script>
     let easyMDE, rootHandle, currentFileHandle, autoSaveTimeout;
-    let collapsedFolders = new Set();
-    let draggedItem = null;
-    let ctxTarget = null;
     const db = window.idbKeyval || window.idb_keyval;
     const loadingTexts = ["RESTAURATION DE LA SESSION...", "OUVERTURE DU GRIMOIRE...", "CHARGEMENT DE L'UNIVERS...", "OUVERTURE DE MIRO...", "ENTRÉE DANS LA PEINTURE...", "RÉCUPÉRATION DE MONOCO..."];
 
@@ -156,52 +155,6 @@
             }
         });
 
-        document.addEventListener('click', () => document.getElementById('ctx-menu').style.display = 'none');
-        
-        document.getElementById('ctx-delete').addEventListener('click', async (ev) => {
-            ev.stopPropagation();
-            document.getElementById('ctx-menu').style.display = 'none';
-            if (ctxTarget) {
-                try {
-                    await ctxTarget.parent.removeEntry(ctxTarget.name, { recursive: true });
-                    if (currentFileHandle && currentFileHandle.name === ctxTarget.name) {
-                        easyMDE.value("");
-                        document.getElementById('current-filename').innerText = "📍 Prêt pour la rédaction";
-                        currentFileHandle = null;
-                    }
-                    showNotif("Élément supprimé");
-                    renderTree();
-                } catch (e) { showNotif("Erreur de suppression"); }
-            }
-        });
-
-        document.getElementById('ctx-rename').addEventListener('click', async (ev) => {
-            ev.stopPropagation();
-            document.getElementById('ctx-menu').style.display = 'none';
-            if (ctxTarget) {
-                if (ctxTarget.kind === 'directory') return showNotif("Impossible de renommer un dossier.");
-                let newName = prompt("Nouveau nom :", ctxTarget.name);
-                if (newName && newName !== ctxTarget.name) {
-                    if (!newName.includes('.')) newName += '.md';
-                    try {
-                        const file = await ctxTarget.handle.getFile();
-                        const content = await file.text();
-                        const newHandle = await ctxTarget.parent.getFileHandle(newName, { create: true });
-                        const w = await newHandle.createWritable();
-                        await w.write(content);
-                        await w.close();
-                        await ctxTarget.parent.removeEntry(ctxTarget.name);
-                        if (currentFileHandle && currentFileHandle.name === ctxTarget.name) {
-                            currentFileHandle = newHandle;
-                            document.getElementById('current-filename').innerText = "📍 " + newHandle.name;
-                        }
-                        showNotif("Fichier renommé");
-                        renderTree();
-                    } catch (e) { showNotif("Erreur de renommage"); }
-                }
-            }
-        });
-
         const savedTheme = localStorage.getItem('obsidian-theme') || 'dark';
         document.getElementById('theme-selector').value = savedTheme;
         changeTheme(savedTheme);
@@ -211,14 +164,19 @@
                 const storedHandle = await db.get('root-handle');
                 if (storedHandle) {
                     rootHandle = storedHandle;
-                    document.getElementById('file-tree').innerHTML = `
-                        <div style='padding:15px; text-align:center;'>
-                            <button onclick="verifyPermission()" style="width:100%; background:#007acc; color:white; font-weight:bold; padding:12px;">🔓 Restaurer l'espace</button>
-                            <p style='font-size:11px; opacity:0.6; margin-top:8px;'>Requis par le navigateur pour l'accès local.</p>
-                        </div>`;
+                    const status = await rootHandle.queryPermission({mode: 'readwrite'});
+                    if (status === 'granted') {
+                        await renderTree();
+                    } else {
+                        document.getElementById('file-tree').innerHTML = `
+                            <div style='padding:15px; text-align:center;'>
+                                <p style='font-size:12px; opacity:0.6;'>Accès expiré</p>
+                                <button onclick="verifyPermission()" style="width:100%;">🔓 Réactiver</button>
+                            </div>`;
+                    }
                 }
             }
-        } catch (e) {}
+        } catch (e) { console.error(e); }
 
         setTimeout(() => {
             document.getElementById('splash').classList.add('fade-out');
@@ -252,6 +210,7 @@
         sLogo.src = logoPath;
         spLogo.src = logoPath;
 
+        // MODIF 3 : On sniff la couleur du body (même via CSS externe) et on l'injecte dans la variable
         setTimeout(() => {
             const bg = window.getComputedStyle(document.body).backgroundColor;
             document.documentElement.style.setProperty('--dynamic-bg', bg);
@@ -277,91 +236,22 @@
     async function renderTree() {
         const c = document.getElementById('file-tree');
         c.innerHTML = ""; 
-        if (rootHandle) await listFiles(rootHandle, c, rootHandle, "");
+        if (rootHandle) await listFiles(rootHandle, c);
     }
 
-    async function listFiles(h, c, parentH, path) {
+    async function listFiles(h, c) {
         const entries = [];
         for await (const entry of h.values()) entries.push(entry);
         entries.sort((a, b) => (b.kind === 'directory') - (a.kind === 'directory'));
-        
         for (const e of entries) {
             const d = document.createElement('div');
-            const currentPath = path + "/" + e.name;
-            
-            d.oncontextmenu = (ev) => {
-                ev.preventDefault();
-                ev.stopPropagation();
-                ctxTarget = { parent: h, handle: e, name: e.name, kind: e.kind };
-                const m = document.getElementById('ctx-menu');
-                m.style.left = ev.pageX + 'px';
-                m.style.top = ev.pageY + 'px';
-                m.style.display = 'block';
-            };
-
             if (e.kind === 'directory') {
-                d.className = "folder";
-                const icon = collapsedFolders.has(currentPath) ? "📁 " : "📂 ";
-                d.innerHTML = icon + e.name;
-                const s = document.createElement('div'); 
-                s.style.paddingLeft = "12px"; 
-                s.style.borderLeft = "1px solid rgba(128,128,128,0.3)"; 
-                s.style.marginLeft = "6px";
-                s.style.display = collapsedFolders.has(currentPath) ? "none" : "block";
-                
-                d.onclick = (ev) => {
-                    ev.stopPropagation();
-                    if (collapsedFolders.has(currentPath)) {
-                        collapsedFolders.delete(currentPath);
-                        s.style.display = "block";
-                        d.innerHTML = "📂 " + e.name;
-                    } else {
-                        collapsedFolders.add(currentPath);
-                        s.style.display = "none";
-                        d.innerHTML = "📁 " + e.name;
-                    }
-                };
-
-                d.ondragover = (ev) => { ev.preventDefault(); d.classList.add('drag-over'); };
-                d.ondragleave = () => d.classList.remove('drag-over');
-                d.ondrop = async (ev) => {
-                    ev.preventDefault();
-                    d.classList.remove('drag-over');
-                    if (draggedItem && draggedItem.parent !== e) {
-                        try {
-                            const file = await draggedItem.handle.getFile();
-                            const content = await file.text();
-                            const newHandle = await e.getFileHandle(draggedItem.name, { create: true });
-                            const writable = await newHandle.createWritable();
-                            await writable.write(content);
-                            await writable.close();
-                            await draggedItem.parent.removeEntry(draggedItem.name);
-                            if (currentFileHandle && currentFileHandle.name === draggedItem.name) currentFileHandle = newHandle;
-                            renderTree();
-                        } catch (err) { showNotif("Erreur de déplacement"); }
-                    }
-                };
-
-                c.appendChild(d); 
-                c.appendChild(s); 
-                await listFiles(e, s, h, currentPath);
-
+                d.className = "folder"; d.innerHTML = "📂 " + e.name;
+                const s = document.createElement('div'); s.style.paddingLeft = "12px"; s.style.borderLeft = "1px solid rgba(128,128,128,0.3)"; s.style.marginLeft = "6px";
+                c.appendChild(d); c.appendChild(s); await listFiles(e, s);
             } else if (e.name.match(/\.(md|txt)$/)) {
-                d.className = "file-item"; 
-                d.innerHTML = "📄 " + e.name;
-                if (currentFileHandle && currentFileHandle.name === e.name) d.classList.add('file-active');
-                
-                d.draggable = true;
-                d.ondragstart = (ev) => {
-                    ev.stopPropagation();
-                    draggedItem = { handle: e, parent: h, name: e.name };
-                };
-
-                d.onclick = (ev) => {
-                    ev.stopPropagation();
-                    openFile(e, d);
-                };
-                c.appendChild(d);
+                d.className = "file-item"; d.innerHTML = "📄 " + e.name;
+                d.onclick = () => openFile(e, d); c.appendChild(d);
             }
         }
     }
@@ -392,30 +282,28 @@
         } catch (err) { showNotif("Erreur ! ❌"); }
     }
 
-    async function createNewFile() {
-        if (!rootHandle) return showNotif("Ouvrez d'abord un espace.");
-        let n = prompt("Nom du nouveau fichier :");
-        if (n) { 
-            if (!n.includes('.')) n += '.md';
-            await rootHandle.getFileHandle(n, { create: true }); 
-            renderTree(); 
-        }
+async function createNewFile() {
+    if (!rootHandle) return showNotif("Ouvrez d'abord un espace.");
+    const n = prompt("Nom du nouveau fichier :");
+    if (n) { 
+        await rootHandle.getFileHandle(n, { create: true }); 
+        renderTree(); 
     }
-
+}
     async function createNewFolder() {
-        if (!rootHandle) return showNotif("Ouvrez d'abord un espace.");
-        const name = prompt("Nom du nouveau dossier :");
-        if (name) {
-            try {
-                await rootHandle.getDirectoryHandle(name, { create: true });
-                renderTree(); 
-                showNotif("Repertoire créé.");
-            } catch (err) {
-                alert("Erreur de création. Le nom existe déjà ou est invalide.");
-            }
+    if (!rootHandle) return showNotif("Ouvrez d'abord un espace.");;
+    const name = prompt("Nom du nouveau dossier :");
+    if (name) {
+        try {
+            await rootHandle.getDirectoryHandle(name, { create: true });
+            renderTree(); 
+            showNotif("Repertoire créé.");
+        } catch (err) {
+            console.error(err);
+            alert("I shat myself. (EACCESS / PERM) This usually means that the name already exists or that it's unvalid!");
         }
     }
-
+}
     function showNotif(text, duration = 2000) {
         const n = document.getElementById('notif');
         n.innerText = text; n.classList.add('show');
@@ -432,7 +320,6 @@
 
     document.addEventListener('keydown', e => {
         if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveCurrentFile(); }
-        if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); createNewFile(); }
     });
 </script>
 </body>
