@@ -14,11 +14,6 @@
          @keyframes boing { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
         .fade-out { opacity: 0; transition: opacity 0.8s ease-out; pointer-events: none; }
         body { display: flex; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; overflow: hidden; }
-        body.theme-dark { background: #1e1e1e; color: #d4d4d4; }
-        body.theme-dark #sidebar { background: #252526; border-right: 1px solid #333; }
-        body.theme-dark .file-item { color: #d4d4d4; }
-        body.theme-dark .folder { color: #888; }
-        body.theme-dark #help-modal { background: #252526; color: #d4d4d4; border-color: #444; }
         body.theme-light { background: #ffffff; color: #1e1e1e; }
         body.theme-light #sidebar { background: #f3f3f3; border-right: 1px solid #ccc; }
         body.theme-light .file-item { color: #1e1e1e; }
@@ -26,6 +21,12 @@
         body.theme-light .sidebar-brand { color: #005fb8; }
         body.theme-light .sidebar-footer { border-top: 1px solid #ccc; color: #1e1e1e; }
         body.theme-light #help-modal { background: #ffffff; color: #1e1e1e; border-color: #ccc; }
+        body.theme-dark { background: #1e1e1e; color: #d4d4d4; }
+        body.theme-dark #sidebar { background: #252526; border-right: 1px solid #333; }
+        body.theme-dark .file-item { color: #d4d4d4; }
+        body.theme-dark .folder { color: #888; }
+        body.theme-dark .CodeMirror-cursor { border-left: 2px solid #27beff !important; visibility: visible !important; }
+        body.theme-dark #help-modal { background: #252526; color: #d4d4d4; border-color: #444; }
         #splash { position: fixed; top:0; left:0; width:100%; height:100%; background: #1e1e1e; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         .logo-splash { width: 200px; object-fit: contain; margin-bottom: 20px; animation: boing 2.5s infinite ease-in-out; }
         #sidebar { width: 300px; display: flex; flex-direction: column; justify-content: space-between; z-index: 10; }
@@ -94,9 +95,9 @@
             <button onclick="pickDirectory()">📁 Ouvrir Dossier</button>
             <button onclick="createNewFile()">📄 Nouveau Fichier</button>
             <select id="theme-selector" onchange="changeTheme(this.value)">
-                <option value="dark">🌙 Sombre</option>
-                <option value="light">☀️ Clair</option>
-                <option value="auto">🌓 Auto</option>
+                    <option value="light">☀️ Clair</option>
+                    <option value="auto">🌓 Auto</option>    
+                    <option value="dark">🌙 Sombre</option>
                 <optgroup label="Thèmes Officiels">
                     <?php foreach(glob('themes/official/*.css') as $t) echo "<option value='$t'>⭐ ".basename($t, '.css')."</option>"; ?>
                 </optgroup>
