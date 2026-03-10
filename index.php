@@ -21,6 +21,7 @@
         body.theme-light .sidebar-brand { color: #005fb8; }
         body.theme-light .sidebar-footer { border-top: 1px solid #ccc; color: #1e1e1e; }
         body.theme-light #help-modal { background: #ffffff; color: #1e1e1e; border-color: #ccc; }
+        body.theme-light .CodeMirror-cursor { border-left: 2px solid #27beff !important; visibility: visible !important; }
         body.theme-dark { background: #1e1e1e; color: #d4d4d4; }
         body.theme-dark #sidebar { background: #252526; border-right: 1px solid #333; }
         body.theme-dark .file-item { color: #d4d4d4; }
@@ -50,6 +51,8 @@
         .folder { font-weight: bold; margin-top: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
         #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; position: relative; }
         .editor-toolbar button { color: inherit !important; }
+        .CodeMirror-wrap pre.CodeMirror-line {word-break: break-all; overflow-wrap: break-word;}
+        #editor-container {min-width: 0; }
         .editor-preview, .editor-preview-side { 
     background-color: var(--dynamic-bg) !important; 
     color: inherit !important; 
