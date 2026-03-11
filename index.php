@@ -13,6 +13,8 @@
          @keyframes boing { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
         .fade-out { opacity: 0; transition: opacity 0.8s ease-out; pointer-events: none; }
         body { display: flex; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; overflow: hidden; }
+        #sidebar {overflow-y: auto !important; position: relative; flex-grow: 0;}
+        .sidebar-footer {position: flex; flex-direction: column;}
         body.theme-light { background: #ffffff; color: #1e1e1e; }
         body.theme-light #sidebar { background: #f3f3f3; border-right: 1px solid #ccc; }
         body.theme-light .file-item { color: #1e1e1e; }
@@ -275,7 +277,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     let ctxTarget = null;
     const db = window.idbKeyval || window.idb_keyval;
     const loadingTexts = ["ON PRÉPARE LES TRUCS BIEN...", "OUVERTURE DE C'TRUC...", "ON NÉTTOIE LES PINCEAUX...", "OUVERTURE DE MIRO...", "ENTRÉE DANS LA PEINTURE...", "RÉCUPÉRATION DE MONOCO...", "APPLICATIONS DES DROITS TRANS...", "ON BRANDIS LES DRAPEAUX TRANS...", "ON BRANDIS LES DRAPEAUX LGBTQ+...", "ON RÉVEILLE LE CAMÉLÉON...", "ON RÉVEILLE LEXULATHU'AL...", "DES BISOUX POUR LES SUPPORTERS...", "ON NETTOIE LES DOSSIERS...", "PEINDRE L'AMOUR...", "PEINDRE LA VIE...", "PLEURER EN COULEUR...", "SUR LA TOILE NOTRE VIE S'ÉCRIT..."];
-    const loadingTexts2 = ["Mirqo c'est le nom d'un très bon chien!", "Bientôt on ferra bien plus que jeter des cailloux.", "J'avais beaucoup de temps à perdre!", "Rebonjour!", "Merci de t'amuser!", "Hein? C'est quoi deez?", "On respectera toujours votre vie privée!", "Cryptid crush c'était mieux avant.", "Salut Romy!", "Salut Dominik!", "Salut Craze!", "Salut Sim!", "La paix pour tous... C'est quand?", "Continuer à t'aimer, continuer de peindre...", "Tout ça dans un seul fichier php?", "J'ai plus d'idée de sous titre."];
+    const loadingTexts2 = ["Mirqo c'est le nom d'un très bon chien!", "Bientôt on ferra bien plus que jeter des cailloux.", "J'avais beaucoup de temps à perdre!", "Rebonjour!", "Merci de t'amuser!", "Hein? C'est quoi deez?", "On respectera toujours votre vie privée!", "Cryptid crush c'était mieux avant.", "Salut Romy!", "Salut Dominik!", "Salut Craze!", "Salut Sim!", "La paix pour tous... C'est quand?", "Continuer à t'aimer, continuer de peindre...", "Tout ça dans un seul fichier php?","Hi Grey!!!!!! :33","J'ai plus d'idée de sous titre."];
 
     window.onload = async () => {
         document.getElementById('splash-title').innerText = loadingTexts[Math.floor(Math.random() * loadingTexts.length)];
