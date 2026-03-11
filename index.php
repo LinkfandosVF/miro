@@ -63,6 +63,36 @@
         #ctx-menu div:hover { background: #007acc; color: white; }
         #ctx-delete { color: #ff4d4d !important; }
         #ctx-delete:hover { background: #ff4d4d !important; color: white !important; }
+
+        
+        /* solid snake ass*/
+        .CodeMirror-line .cm-formatting, 
+        .CodeMirror-line .cm-formatting-header, 
+        .CodeMirror-line .cm-formatting-list, 
+        .CodeMirror-line .cm-formatting-em, 
+        .CodeMirror-line .cm-formatting-strong {
+            display: inline-block !important;
+            opacity: 0 !important;
+            width: 0 !important;
+            letter-spacing: -1em !important;
+            transition: all 0.2s ease-in-out !important;
+            pointer-events: none;
+            overflow: hidden;
+            vertical-align: middle;
+        }
+
+        /* Js on the cursor */
+        .CodeMirror-line.show-markers .cm-formatting,
+        .CodeMirror-line.show-markers .cm-formatting-header,
+        .CodeMirror-line.show-markers .cm-formatting-list,
+        .CodeMirror-line.show-markers .cm-formatting-em,
+        .CodeMirror-line.show-markers .cm-formatting-strong {
+            opacity: 0.6 !important;
+            width: auto !important;
+            letter-spacing: normal !important;
+            pointer-events: auto;
+        }
+
     </style>
 </head>
 <body class="theme-dark">
@@ -145,8 +175,23 @@
         
         easyMDE = new EasyMDE({ 
             element: document.getElementById('my-editor'),
-            spellChecker: false, autofocus: true, forceSync: true,
+            spellChecker: false, 
+            autofocus: true, 
+            forceSync: true,
+            styleActiveLine: true,
             toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "preview", "|", "guide"]
+        });
+
+        easyMDE.codemirror.on("cursorActivity", (cm) => {
+            cm.eachLine(line => {
+                const info = cm.lineInfo(line);
+                if (info.handle.widgets) return; // ignore widgets
+                cm.removeLineClass(line, "text", "show-markers");
+            });
+
+            // Adding the class on the cursor
+            const currentLine = cm.getCursor().line;
+            cm.addLineClass(currentLine, "text", "show-markers");
         });
 
         easyMDE.codemirror.on("change", () => {
