@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <link id="theme-link" rel="stylesheet" href="">
     <style>
+        
         :root { --dynamic-bg: #1e1e1e; }
          @keyframes boing { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
         .fade-out { opacity: 0; transition: opacity 0.8s ease-out; pointer-events: none; }
@@ -40,6 +41,7 @@
         .github-link a { color: inherit; opacity: 0.7; text-decoration: none; font-size: 12px; transition: opacity 0.2s; display: flex; align-items: center; gap: 5px; }
         .github-link a:hover { opacity: 1; }
         .help-btn { background: #007acc; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; font-weight: bold; }
+        #sidebar-mode-toggle { background: #007acc; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; font-weight: bold; }
         #help-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 25px; border-radius: 8px; z-index: 10000; width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border-style: solid; border-width: 1px; }
         #help-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 9999; }
         #notif { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); padding: 10px 25px; background: #007acc; color: white; border-radius: 30px; font-size: 13px; font-weight: bold; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10001; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
@@ -93,23 +95,132 @@
             pointer-events: auto;
         }
 
+
+
+/* ============================= */
+/* FLOATING SIDEBAR MODE */
+/* ============================= */
+
+#sidebar {
+    transition: all .35s cubic-bezier(.4,0,.2,1);
+}
+
+body.sidebar-floating #sidebar {
+
+    position: fixed;
+
+    left: 10px;
+    top: 10px;
+    bottom: 10px;
+
+    width: 280px;
+
+    border-radius: 24px;
+
+    border: 1px solid rgba(0,0,0,0.1);
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.25),
+        0 2px 10px rgba(0,0,0,0.15);
+
+    backdrop-filter: blur(14px);
+
+    z-index: 1000;
+}
+
+/* hidden state */
+
+body.sidebar-floating.sidebar-hidden #sidebar {
+
+    transform: translateX(-110%);
+}
+
+/* hover edge */
+
+#sidebar-edge-trigger {
+
+    position: fixed;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 6px;
+
+    z-index: 999;
+}
+
+/* mobile button */
+
+#sidebar-touch-button {
+
+    position: fixed;
+
+    top: 14px;
+    left: 14px;
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: rgba(0,0,0,0.35);
+
+    color: white;
+
+    display: none;
+
+    z-index: 1200;
+}
+
+/* show mobile */
+
+@media (pointer: coarse) {
+
+    #sidebar-touch-button {
+        display: block;
+    }
+
+}
+
+
+
+
     </style>
 </head>
 <body class="theme-dark">
+<div id="sidebar-edge-trigger"></div>
 
 <div id="splash">
     <img id="splash-logo" src="logos/dark.png" class="logo-splash" onerror="this.src='logos/dark.png'">
     <div id="splash-title" style="color: white; font-weight: bold; letter-spacing: 1px;">INITIALISATION...</div>
-    <div id="tip" style="color: #888; margin-top: 10px; font-style: italic;">Bon retour parmi nous...</div>
+    <div id="splash-subtitle" style="color: #888; margin-top: 10px; font-style: italic;">Bon retour parmi nous...</div>
 </div>
 
 <div id="help-overlay" onclick="toggleHelp()"></div>
 <div id="help-modal">
-    <h2 style="margin-top:0; color:#007acc;">Bienvenu sur Miro!</h2>
-    <p><b>📁 Dossier :</b> Ouvrez votre répertoire. L'accès est mémorisé au prochain démarrage !</p>
-    <p><b>💾 Sauvegarde :</b> Automatique ou <code>CTRL + S</code>.</p>
-    <p><b>🌓 Thèmes :</b> Customizable à souhait! Vos préférences sont sauvegardées automatiquement.</p>
+    <h2 style="margin-top:0; color:#007acc;">Réglages</h2>
+    <p><b>⌘</b> Ouvre les réglages</p>
+    <p><b>⎋</b> Active le flotteur</p>
+    <label style="font-size: 14px; cursor:pointer; opacity: 100%;"><input type="checkbox" id="autosave-toggle" checked>Sauvegarde Auto</label>
+    <p><b>🌓 Thèmes</b></p> 
+    <select id="theme-selector" onchange="changeTheme(this.value)">
+                    <option value="light">☀️ Clair</option>
+                    <option value="auto">🌓 Auto</option>  
+                    <option value="dark">🌙 Sombre</option>
+                <optgroup label="Thèmes Officiels">
+                    <?php foreach(glob('themes/official/*.css') as $t) echo "<option value='$t'>⭐ ".basename($t, '.css')."</option>"; ?>
+                </optgroup>
+                <optgroup label="Communauté">
+                    <?php foreach(glob('themes/commu/*.css') as $t) echo "<option value='$t'>👥 ".basename($t, '.css')."</option>"; ?>
+                </optgroup>
+                <optgroup label="Personnel">
+                    <?php foreach(glob('themes/custom/*.css') as $t) echo "<option value='$t'>☮ ".basename($t, '.css')."</option>"; ?>
+                </optgroup>
+            </select>
+            <p>Allez voir le github pour apprendre à créer vos propres thèmes!</p>
     <button onclick="toggleHelp()" style="width: 100%; margin-top: 10px; background: #007acc; color: white;">C'est parti !</button>
+    <p style="font-size: 11px; text-align: center">Fait avec amour par aalllaaasss & friends...</p>
 </div>
 
 <div id="notif">Saving...</div>
@@ -127,35 +238,29 @@
             <button id="btn-open-dir" onclick="pickDirectory()">📁 Ouvrir Un Espace</button>
             <button onclick="createNewFile()">📄 Nouveau Fichier</button>
             <button onclick="createNewFolder()">📂 Nouveau Dossier</button>
-            <select id="theme-selector" onchange="changeTheme(this.value)">
-                    <option value="light">☀️ Clair</option>
-                    <option value="auto">🌓 Auto</option>  
-                    <option value="dark">🌙 Sombre</option>
-                <optgroup label="Thèmes Officiels">
-                    <?php foreach(glob('themes/official/*.css') as $t) echo "<option value='$t'>⭐ ".basename($t, '.css')."</option>"; ?>
-                </optgroup>
-                <optgroup label="Communauté">
-                    <?php foreach(glob('themes/commu/*.css') as $t) echo "<option value='$t'>👥 ".basename($t, '.css')."</option>"; ?>
-                </optgroup>
-                <optgroup label="Personnel">
-                    <?php foreach(glob('themes/custom/*.css') as $t) echo "<option value='$t'>☮ ".basename($t, '.css')."</option>"; ?>
-                </optgroup>
-            </select>
+            
         </div>
         <div id="file-tree"></div>
     </div>
     <div class="sidebar-footer">
-        <div class="github-link"><a href="https://github.com/LinkfandosVF/miro" target="_blank"><i class="fa fa-github"></i> GitHub Repo</a></div>
-        <button class="help-btn" onclick="toggleHelp()">?</button>
+    <div class="github-link">
+        <a href="https://github.com/LinkfandosVF/miro" target="_blank">
+            <i class="fa fa-github"></i> GitHub Repo
+        </a>
     </div>
+
+    <div style="display:flex; gap:6px;">
+        <button id="sidebar-mode-toggle" title="Sidebar flottante">⎋</button>
+        <button class="help-btn" onclick="toggleHelp()">⌘</button>
+    </div>
+</div>
 </div>
 
 <div id="editor-container">
     <div>
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:10px;">
-        <span id="current-filename" style="opacity: 0.6; font-size: 14px;">📍 Prêt pour la rédaction</span>
+        <span id="current-filename" style="opacity: 0.6; font-size: 14px;">📍 No file.</span>
         <div style="display: flex; align-items: center; gap: 15px;">
-            <label style="font-size: 12px; cursor:pointer; opacity: 0.8;"><input type="checkbox" id="autosave-toggle" checked> Auto-save</label>
             <button id="btn-save" onclick="saveCurrentFile()" disabled>💾 Sauvegarder</button>
         </div>
     </div>
@@ -169,11 +274,13 @@
     let draggedItem = null;
     let ctxTarget = null;
     const db = window.idbKeyval || window.idb_keyval;
-    const loadingTexts = ["RESTAURATION DE LA SESSION...", "OUVERTURE DU GRIMOIRE...", "CHARGEMENT DE L'UNIVERS...", "OUVERTURE DE MIRO...", "ENTRÉE DANS LA PEINTURE...", "RÉCUPÉRATION DE MONOCO..."];
+    const loadingTexts = ["ON PRÉPARE LES TRUCS BIEN...", "OUVERTURE DE C'TRUC...", "ON NÉTTOIE LES PINCEAUX...", "OUVERTURE DE MIRO...", "ENTRÉE DANS LA PEINTURE...", "RÉCUPÉRATION DE MONOCO...", "APPLICATIONS DES DROITS TRANS...", "ON BRANDIS LES DRAPEAUX TRANS...", "ON BRANDIS LES DRAPEAUX LGBTQ+...", "ON RÉVEILLE LE CAMÉLÉON...", "ON RÉVEILLE LEXULATHU'AL...", "DES BISOUX POUR LES SUPPORTERS...", "ON NETTOIE LES DOSSIERS...", "PEINDRE L'AMOUR...", "PEINDRE LA VIE...", "PLEURER EN COULEUR...", "SUR LA TOILE NOTRE VIE S'ÉCRIT..."];
+    const loadingTexts2 = ["Mirqo c'est le nom d'un très bon chien!", "Bientôt on ferra bien plus que jeter des cailloux.", "J'avais beaucoup de temps à perdre!", "Rebonjour!", "Merci de t'amuser!", "Hein? C'est quoi deez?", "On respectera toujours votre vie privée!", "Cryptid crush c'était mieux avant.", "Salut Romy!", "Salut Dominik!", "Salut Craze!", "Salut Sim!", "La paix pour tous... C'est quand?", "Continuer à t'aimer, continuer de peindre...", "Tout ça dans un seul fichier php?", "J'ai plus d'idée de sous titre."];
 
     window.onload = async () => {
         document.getElementById('splash-title').innerText = loadingTexts[Math.floor(Math.random() * loadingTexts.length)];
-        
+        document.getElementById('splash-subtitle').innerText = loadingTexts2[Math.floor(Math.random() * loadingTexts2.length)];
+
         easyMDE = new EasyMDE({ 
             element: document.getElementById('my-editor'),
             spellChecker: false, 
@@ -212,7 +319,7 @@
                     await ctxTarget.parent.removeEntry(ctxTarget.name, { recursive: true });
                     if (currentFileHandle && currentFileHandle.name === ctxTarget.name) {
                         easyMDE.value("");
-                        document.getElementById('current-filename').innerText = "📍 Prêt pour la rédaction";
+                        document.getElementById('current-filename').innerText = "📍 Ready.";
                         currentFileHandle = null;
                     }
                     showNotif("Élément supprimé");
@@ -239,7 +346,7 @@
                         await ctxTarget.parent.removeEntry(ctxTarget.name);
                         if (currentFileHandle && currentFileHandle.name === ctxTarget.name) {
                             currentFileHandle = newHandle;
-                            document.getElementById('current-filename').innerText = "📍 " + newHandle.name;
+                            document.getElementById('current-filename').innerText = "➤ " + newHandle.name;
                         }
                         showNotif("Fichier renommé");
                         renderTree();
@@ -418,7 +525,7 @@
         currentFileHandle = h;
         const f = await h.getFile();
         easyMDE.value(await f.text());
-        document.getElementById('current-filename').innerText = "📍 " + f.name;
+        document.getElementById('current-filename').innerText = "► " + f.name;
         document.getElementById('btn-save').disabled = false;
         easyMDE.codemirror.focus();
     }
@@ -480,6 +587,47 @@
         if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveCurrentFile(); }
         if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); createNewFile(); }
     });
+
+
+/* ============================= */
+/* SIDEBAR FLOATING MODE */
+/* ============================= */
+
+window.addEventListener("load", () => {
+
+    const sidebarToggle = document.getElementById("sidebar-mode-toggle")
+    const sidebarEdge = document.getElementById("sidebar-edge-trigger")
+    const sidebarTouch = document.getElementById("sidebar-touch-button")
+    const sidebar = document.getElementById("sidebar")
+
+    if(!sidebar || !sidebarEdge) return
+
+    if(sidebarToggle){
+        sidebarToggle.onclick = () => {
+            document.body.classList.toggle("sidebar-floating")
+        }
+    }
+
+    function showSidebar(){
+        document.body.classList.remove("sidebar-hidden")
+    }
+
+    function hideSidebar(){
+        if(document.body.classList.contains("sidebar-floating"))
+            document.body.classList.add("sidebar-hidden")
+    }
+
+    sidebarEdge.addEventListener("mouseenter", showSidebar)
+    sidebar.addEventListener("mouseleave", hideSidebar)
+
+    if(sidebarTouch){
+        sidebarTouch.onclick = () => {
+            document.body.classList.toggle("sidebar-hidden")
+        }
+    }
+
+})
+
 </script>
 </body>
 </html>
