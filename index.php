@@ -115,7 +115,7 @@
         <div id="file-tree"></div>
     </div>
     <div class="sidebar-footer">
-        <div class="github-link"><a href="https://github.com" target="_blank"><i class="fa fa-github"></i> GitHub Repo</a></div>
+        <div class="github-link"><a href="https://github.com/LinkfandosVF/miro" target="_blank"><i class="fa fa-github"></i> GitHub Repo</a></div>
         <button class="help-btn" onclick="toggleHelp()">?</button>
     </div>
 </div>
