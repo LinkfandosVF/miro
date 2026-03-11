@@ -14,7 +14,7 @@
         .fade-out { opacity: 0; transition: opacity 0.8s ease-out; pointer-events: none; }
         body { display: flex; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; overflow: hidden; }
         #sidebar {overflow-y: auto !important; position: relative; flex-grow: 0;}
-        .sidebar-footer {position: flex; flex-direction: column;}
+        .sidebar-footer {position: flex; flex-direction: row;}
         body.theme-light { background: #ffffff; color: #1e1e1e; }
         body.theme-light #sidebar { background: #f3f3f3; border-right: 1px solid #ccc; }
         body.theme-light .file-item { color: #1e1e1e; }
