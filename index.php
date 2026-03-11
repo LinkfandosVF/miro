@@ -13,8 +13,12 @@
          @keyframes boing { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
         .fade-out { opacity: 0; transition: opacity 0.8s ease-out; pointer-events: none; }
         body { display: flex; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; overflow: hidden; }
-        #sidebar {overflow-y: auto !important; position: relative; flex-grow: 0;}
+        #sidebar {width: 300px; display: flex; flex-direction: column; height: 100vh; z-index: 10;}
         .sidebar-footer {position: flex; flex-direction: row;}
+        .sidebar-top-group {
+    flex-shrink: 0;
+}
+        .wawascroll {flex-grow: 1; overflow-y: auto;}
         body.theme-light { background: #ffffff; color: #1e1e1e; }
         body.theme-light #sidebar { background: #f3f3f3; border-right: 1px solid #ccc; }
         body.theme-light .file-item { color: #1e1e1e; }
@@ -38,8 +42,20 @@
         #sidebar { width: 300px; display: flex; flex-direction: column; justify-content: space-between; z-index: 10; }
         .sidebar-brand { padding: 15px; font-size: 1.1rem; font-weight: bold; color: #007acc; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; align-items: center; gap: 10px; }
         .sidebar-header { padding: 15px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; flex-direction: column; gap: 8px; }
-        #file-tree { flex: 1; overflow-y: auto; padding: 10px; }
-        .sidebar-footer { padding: 12px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(128,128,128,0.2); }
+#file-tree {
+    flex-grow: 1;      /* Prend tout l'espace restant */
+    overflow-y: auto !important; /* Autorise le scroll ici */
+    min-height: 0;     /* TRÈS IMPORTANT : permet au flex-item de rétrécir sous son contenu */
+    padding: 10px;
+}
+       .sidebar-footer {
+    flex-shrink: 0;    /* Reste en bas sans s'écraser */
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(128,128,128,0.2);
+}
         .github-link a { color: inherit; opacity: 0.7; text-decoration: none; font-size: 12px; transition: opacity 0.2s; display: flex; align-items: center; gap: 5px; }
         .github-link a:hover { opacity: 1; }
         .help-btn { background: #007acc; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; font-weight: bold; }
@@ -232,28 +248,29 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 </div>
 
 <div id="sidebar">
-    <div>
+    <div class="sidebar-top-group"> 
         <div class="sidebar-brand">
-            <img id="sidebar-logo" src="logos/dark.png" style="width:250px; object-fit:contain;" onerror="this.src='logos/dark.png'">
+            <img id="sidebar-logo" src="logos/dark.png" style="width:250px; object-fit:contain;">
         </div>
         <div class="sidebar-header">
             <button id="btn-open-dir" onclick="pickDirectory()">📁 Ouvrir Un Espace</button>
             <button onclick="createNewFile()">📄 Nouveau Fichier</button>
             <button onclick="createNewFolder()">📂 Nouveau Dossier</button>
-            
         </div>
-        <div id="file-tree"></div>
-    </div>
-    <div class="sidebar-footer">
-    <div class="github-link">
-        <a href="https://github.com/LinkfandosVF/miro" target="_blank">
-            <i class="fa fa-github"></i> GitHub Repo
-        </a>
     </div>
 
-    <div style="display:flex; gap:6px;">
-        <button id="sidebar-mode-toggle" title="Sidebar flottante">⎋</button>
-        <button class="help-btn" onclick="toggleHelp()">⌘</button>
+    <div id="file-tree"></div>
+
+    <div class="sidebar-footer">
+        <div class="github-link">
+            <a href="https://github.com/LinkfandosVF/miro" target="_blank">
+                <i class="fa fa-github"></i> GitHub Repo
+            </a>
+        </div>
+        <div style="display:flex; gap:6px;">
+            <button id="sidebar-mode-toggle" title="Sidebar flottante">⎋</button>
+            <button class="help-btn" onclick="toggleHelp()">⌘</button>
+        </div>
     </div>
 </div>
 </div>
