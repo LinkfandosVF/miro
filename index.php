@@ -19,14 +19,14 @@
         body.theme-light .sidebar-brand { color: #005fb8; }
         body.theme-light .sidebar-footer { border-top: 1px solid #ccc; color: #1e1e1e; }
         body.theme-light #help-modal { background: #ffffff; color: #1e1e1e; border-color: #ccc; }
-        body.theme-light .CodeMirror-cursor { border-left: 2px solid #27beff !important; visibility: visible !important; }
+        body.theme-light .CodeMirror-cursor { border-left: 2px solid #27beff; visibility: visible; }
         body.theme-light #ctx-menu { background: #ffffff; border-color: #ccc; }
         body.theme-light #ctx-menu div { color: #1e1e1e; }
         body.theme-dark { background: #1e1e1e; color: #d4d4d4; }
         body.theme-dark #sidebar { background: #252526; border-right: 1px solid #333; }
         body.theme-dark .file-item { color: #d4d4d4; }
         body.theme-dark .folder { color: #888; }
-        body.theme-dark .CodeMirror-cursor { border-left: 2px solid #27beff !important; visibility: visible !important; }
+        body.theme-dark .CodeMirror-cursor { border-left: 2px solid #27beff; visibility: visible; }
         body.theme-dark #help-modal { background: #252526; color: #d4d4d4; border-color: #444; }
         body.theme-dark #ctx-menu { background: #252526; border-color: #444; }
         body.theme-dark #ctx-menu div { color: #d4d4d4; }
