@@ -51,7 +51,7 @@
         button, select { background: rgba(128,128,128,0.2); color: inherit; border: none; padding: 8px; cursor: pointer; border-radius: 4px; }
         .file-item { cursor: pointer; padding: 6px 10px; border-radius: 4px; font-size: 13px; margin-bottom: 2px; }
         .file-item:hover { background: rgba(128,128,128,0.1); }
-        .file-active { background: #007acc !important; color: white !important; }
+        .file-active { background: #007acc; color: white; }
         .folder { font-weight: bold; margin-top: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 4px; border-radius: 4px; }
         .folder:hover { background: rgba(128,128,128,0.1); }
         .folder.drag-over { background: rgba(0, 122, 204, 0.3); border: 1px dashed #007acc; }
@@ -114,8 +114,8 @@
 
 <div id="notif">Saving...</div>
 <div id="ctx-menu">
-    <div id="ctx-rename">✏️ Renommer</div>
-    <div id="ctx-delete">🗑️ Supprimer</div>
+    <div id="ctx-rename">✏️ Rename</div>
+    <div id="ctx-delete">🗑️ Delete</div>
 </div>
 
 <div id="sidebar">
@@ -151,6 +151,7 @@
 </div>
 
 <div id="editor-container">
+    <div>
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:10px;">
         <span id="current-filename" style="opacity: 0.6; font-size: 14px;">📍 Prêt pour la rédaction</span>
         <div style="display: flex; align-items: center; gap: 15px;">
