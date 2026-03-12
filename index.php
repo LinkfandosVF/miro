@@ -83,6 +83,7 @@
         #ctx-menu div:hover { background: #007acc; color: white; }
         #ctx-delete { color: #ff4d4d !important; }
         #ctx-delete:hover { background: #ff4d4d !important; color: white !important; }
+        .EasyMDEContainer .CodeMirror {border: inherit;}
 
         
         /* solid snake ass*/
