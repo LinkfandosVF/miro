@@ -1,0 +1,51 @@
+/* your elemental power is GREEEENNNNNNN*/
+body { background: #FDF5E6 !important; color: #919fa0 !important; font-family: 'Times New Roman', Times, serif !important;}
+#sidebar { background: #fffbed !important; border-right: 1px solid #1d1d17 !important; }
+.CodeMirror { background: #fff3c6 !important; color: #F7CAC9 !important; border: 3px solid #e37383 !important}
+.editor-toolbar { background: #E37383 !important; }
+.editor-toolbar button { background: #f57c8e !important;}
+.file-active { background: #4B2C5E !important; }
+button { background: #ff8080 !important; color:#1b261e !important; }
+/* Cursor color in editor */
+.CodeMirror-cursor { border-left: 2px solid #e32aff !important; visibility: visible !important; }
+
+#sidebar-mode-toggle {background-color: #ffc94c !important;}
+.help-btn {background-color: #fd7cff !important;}
+
+.fa{
+    color: #753448;
+} /* It's the text buttons in the editor... */
+
+.editor-preview, .editor-preview-side {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 10 !important;
+    
+    background-color: #1b261e !important;
+    color: #a3b18a !important;
+    overflow-y: auto;
+}
+
+/* Headers */
+.cm-s-easymde .cm-header-1 {
+    color: #ff416e  ; 
+    font-weight: bolder;
+}
+
+.cm-s-easymde .cm-header-2 {
+    color: #e42c66;
+    font-weight: bolder;
+}
+.cm-s-easymde .cm-header-3 {
+    color: #ff1135;
+    font-weight: bolder;
+}
+
+/* Bold */
+.cm-s-easymde .cm-strong {
+    color: #c51ac8;
+    font-weight: bold;
+}

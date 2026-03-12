@@ -66,8 +66,8 @@
         #notif.show { transform: translate(-50%, 0); }
         #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; position: relative; min-width: 0; }
         .editor-toolbar button { color: inherit !important; }
-        .editor-toolbar {border: none !important;}.CodeMirror {border: none !important;}.EasyMDEContainer { border: none !important;}
-        .CodeMirror { background: transparent !important; height: calc(100vh - 150px) !important; flex: 1; border: none !important; color: inherit !important; font-size: 16px; width: 100%; }
+        .editor-toolbar {border: none !important;}.CodeMirror {border: none;}.EasyMDEContainer { border: none !important;}
+        .CodeMirror { background: transparent !important; height: calc(100vh - 150px) !important; flex: 1; border: inherit; color: inherit !important; font-size: 16px; width: 100%; }
         button, select { background: rgba(128,128,128,0.2); color: inherit; border: none; padding: 8px; cursor: pointer; border-radius: 4px; }
         .file-item { cursor: pointer; padding: 6px 10px; border-radius: 4px; font-size: 13px; margin-bottom: 2px; }
         .file-item:hover { background: rgba(128,128,128,0.1); }
@@ -217,12 +217,16 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 
 <div id="help-overlay" onclick="toggleHelp()"></div>
 <div id="help-modal">
-    <h2 style="margin-top:0; color:#007acc;" data-i18n="settings">Réglages</h2>
+    <h2 style="margin-top:0; color:#007acc;" data-i18n="settings">Préférences</h2>
     <p data-i18n="opsettings"><b>⌘</b> Ouvre les réglages</p>
     <p data-i18n="opfloating"><b>⎋</b> Active le flotteur</p>
-    <label style="font-size: 14px; cursor:pointer; opacity: 100%;"><input type="checkbox" id="autosave-toggle" checked>Sauvegarde Auto</label>
+    <h2 style="margin-top:0; color:#007acc;">---</h2>
+    <label style="font-size: 15px; cursor:pointer; opacity: 100%; align-items: center; display: flex;"><input type="checkbox" id="autosave-toggle" checked><p data-i18n="autosavefeature">Sauvegarde Auto</p></label>
+    <p data-i18n="autosavetooltip" style="font-size: 11px">tooltip</p>
     <br>
-    <label data-i18n="themes"><b>Thèmes</b></label> 
+    <br>
+    <p data-i18n="themes" style="font-weight: bold; color:#007acc">themes<p>
+    <label></label> 
     <select id="theme-selector" onchange="changeTheme(this.value)">
                     <option value="light">☀️ Clair</option>
                     <option value="auto">🌓 Auto</option>  
@@ -238,9 +242,9 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                 </optgroup>
             </select>
             <p data-i18n="checkoutgit">Allez voir le github pour apprendre à créer vos propres thèmes!</p>
-    <p><b>Langue</b></p>
+    <p style="font-weight: bold; color:#007acc"><b>Langue</b></p>
     <div class="language-selector">
-    <label for="language-select">Language (WIP)</label>
+    <label for="language-select"></label>
     <select id="language-select">
         <option value="fr">French - Français (Par défaut)</option>
         <option value="en">English - Anglais</option>
@@ -263,9 +267,9 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             <img id="sidebar-logo" src="logos/dark.png" style="width:250px; object-fit:contain;">
         </div>
         <div class="sidebar-header">
-            <button id="btn-open-dir" onclick="pickDirectory()" data-i18n="newdir">📁 Ouvrir Un Espace</button>
+            <button id="btn-open-dir" onclick="pickDirectory()" data-i18n="opspace">📁 Ouvrir Un Espace</button>
             <button onclick="createNewFile()" data-i18n="newfile">📄 Nouveau Fichier</button>
-            <button onclick="createNewFolder()">📂 Nouveau Dossier</button>
+            <button onclick="createNewFolder()" data-i18n="newdir">📂 Nouveau Dossier</button>
         </div>
     </div>
 
@@ -680,8 +684,8 @@ function updateLanguage(language) {
     const translations = {
         en: {
             'settings': 'Preferences',
-            'opsettings': 'Open Settings',
-            'opfloating': 'Enable Floating mode',
+            'opsettings': '⌘ Open Settings',
+            'opfloating': '⎋ Enable Floating mode',
             'checkoutgit': 'Check out the github to learn how to create your own themes!',
             'madewithlove': 'Made with love by aalllaaass and friends...',
             'newfile': '📄 New file',
@@ -692,12 +696,14 @@ function updateLanguage(language) {
             'renamecont': '✏️ Rename',
             'deletecont': '🗑️ Delete',
             'saving': 'Saving...',
+            'autosavefeature': 'Automatic save',
+            'autosavetooltip': 'Saves your document when you stop writing.',
             // copy paste the difs to retranslate to french
         },
         fr: {
             'settings': 'Réglages',
-            'opsettings': 'Ouvrir Les Réglages',
-            'opfloating': 'Activer le flotteur',
+            'opsettings': '⌘ Ouvrir Les Réglages',
+            'opfloating': '⎋ Activer le flotteur',
             'checkoutgit': 'Allez voir le github pour apprendre à créer vos propres thèmes!',
             'madewithlove': 'Fait avec amour par aalllaaasss & friends...',
             'newfile': '📄 Nouveau Fichier',
@@ -708,6 +714,8 @@ function updateLanguage(language) {
             'renamecont': '✏️ Renomer',
             'deletecont': '🗑️ Supprimer',
             'saving': 'Saving...',
+            'autosavefeature': 'Sauvegarde auto',
+            'autosavetooltip': 'Sauvegarde votre document quand vous arrètez d‘écrire.',
         }
     };
 

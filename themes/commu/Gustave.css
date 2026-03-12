@@ -1,0 +1,48 @@
+/* your elemental power is GREEEENNNNNNN*/
+body { background: #1C1F22 !important; color: #919fa0 !important; }
+#sidebar { background: #3f4545 !important; border-right: 1px solid #1d1d17 !important; }
+.CodeMirror { background: #1b261e !important; color: #D4AF37 !important; }
+.editor-toolbar { background: #4B2C5E !important; }
+.editor-toolbar button { background: #4B2C5E !important; color:#7bff8a,}
+.file-active { background: #4B2C5E !important; }
+button { background: #ffeb7a !important; color:#1b261e !important; }
+/* Cursor color in editor */
+.CodeMirror-cursor { border-left: 2px solid #e32aff !important; visibility: visible !important; }
+
+.fa{
+    color:yellow
+}
+
+.editor-preview, .editor-preview-side {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 10 !important;
+    
+    background-color: #1b261e !important;
+    color: #a3b18a !important;
+    overflow-y: auto;
+}
+
+/* Headers */
+.cm-s-easymde .cm-header-1 {
+    color: #d49237  ; 
+    font-weight: bold;
+}
+
+.cm-s-easymde .cm-header-2 {
+    color: #e4b92c;
+    font-weight: bold;
+}
+.cm-s-easymde .cm-header-3 {
+    color: #ffc711;
+    font-weight: bold;
+}
+
+/* Bold */
+.cm-s-easymde .cm-strong {
+    color: #c51ac8;
+    font-weight: bold;
+}
