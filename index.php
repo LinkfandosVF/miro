@@ -217,15 +217,16 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 
 <div id="help-overlay" onclick="toggleHelp()"></div>
 <div id="help-modal">
-    <h2 style="margin-top:0; color:#007acc;">Réglages</h2>
-    <p><b>⌘</b> Ouvre les réglages</p>
-    <p><b>⎋</b> Active le flotteur</p>
+    <h2 style="margin-top:0; color:#007acc;" data-i18n="settings">Réglages</h2>
+    <p data-i18n="opsettings"><b>⌘</b> Ouvre les réglages</p>
+    <p data-i18n="opfloating"><b>⎋</b> Active le flotteur</p>
     <label style="font-size: 14px; cursor:pointer; opacity: 100%;"><input type="checkbox" id="autosave-toggle" checked>Sauvegarde Auto</label>
-    <p><b>🌓 Thèmes</b></p> 
+    <br>
+    <label data-i18n="themes"><b>Thèmes</b></label> 
     <select id="theme-selector" onchange="changeTheme(this.value)">
                     <option value="light">☀️ Clair</option>
                     <option value="auto">🌓 Auto</option>  
-                    <option value="dark">🌙 Sombre</option>
+                    <option value="dark">🌙 Obscur</option>
                 <optgroup label="Thèmes Officiels">
                     <?php foreach(glob('themes/official/*.css') as $t) echo "<option value='$t'>⭐ ".basename($t, '.css')."</option>"; ?>
                 </optgroup>
@@ -236,15 +237,24 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                     <?php foreach(glob('themes/custom/*.css') as $t) echo "<option value='$t'>☮ ".basename($t, '.css')."</option>"; ?>
                 </optgroup>
             </select>
-            <p>Allez voir le github pour apprendre à créer vos propres thèmes!</p>
-    <button onclick="toggleHelp()" style="width: 100%; margin-top: 10px; background: #007acc; color: white;">C'est parti !</button>
-    <p style="font-size: 11px; text-align: center">Fait avec amour par aalllaaasss & friends...</p>
+            <p data-i18n="checkoutgit">Allez voir le github pour apprendre à créer vos propres thèmes!</p>
+    <p><b>Langue</b></p>
+    <div class="language-selector">
+    <label for="language-select">Language (WIP)</label>
+    <select id="language-select">
+        <option value="fr">French - Français (Par défaut)</option>
+        <option value="en">English - Anglais</option>
+        <!-- Add more languages as needed -->
+    </select>
+    </div>
+    <button onclick="toggleHelp()" style="width: 100%; margin-top: 10px; background: #007acc; color: white;">Gotcha</button>
+    <p style="font-size: 11px; text-align: center" data-i18n="madewithlove">Fait avec amour par aalllaaasss & friends...</p>
 </div>
 
-<div id="notif">Saving...</div>
+<div id="notif" ata-i18n="saving">Sauvegarde...</div>
 <div id="ctx-menu">
-    <div id="ctx-rename">✏️ Rename</div>
-    <div id="ctx-delete">🗑️ Delete</div>
+    <div id="ctx-rename" ata-i18n="renamecont">✏️ Rename</div>
+    <div id="ctx-delete" ata-i18n="deletecont">🗑️ Delete</div>
 </div>
 
 <div id="sidebar">
@@ -253,8 +263,8 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             <img id="sidebar-logo" src="logos/dark.png" style="width:250px; object-fit:contain;">
         </div>
         <div class="sidebar-header">
-            <button id="btn-open-dir" onclick="pickDirectory()">📁 Ouvrir Un Espace</button>
-            <button onclick="createNewFile()">📄 Nouveau Fichier</button>
+            <button id="btn-open-dir" onclick="pickDirectory()" data-i18n="newdir">📁 Ouvrir Un Espace</button>
+            <button onclick="createNewFile()" data-i18n="newfile">📄 Nouveau Fichier</button>
             <button onclick="createNewFolder()">📂 Nouveau Dossier</button>
         </div>
     </div>
@@ -268,7 +278,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             </a>
         </div>
         <div style="display:flex; gap:6px;">
-            <button id="sidebar-mode-toggle" title="Sidebar flottante">⎋</button>
+            <button id="sidebar-mode-toggle" title="Sidebar">⎋</button>
             <button class="help-btn" onclick="toggleHelp()">⌘</button>
         </div>
     </div>
@@ -278,9 +288,9 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 <div id="editor-container">
     <div>
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:10px;">
-        <span id="current-filename" style="opacity: 0.6; font-size: 14px;">📍 No file.</span>
+        <span id="current-filename" style="opacity: 0.6; font-size: 14px;">📍 No file to save to.</span>
         <div style="display: flex; align-items: center; gap: 15px;">
-            <button id="btn-save" onclick="saveCurrentFile()" disabled>💾 Sauvegarder</button>
+            <button id="btn-save" onclick="saveCurrentFile()" disabled>💾</button>
         </div>
     </div>
     <textarea id="my-editor"></textarea>
@@ -561,12 +571,12 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                 const b = document.getElementById('btn-save'); b.innerText = "✨ OK";
                 setTimeout(() => b.innerText = "💾 Sauvegarder", 1500);
             }
-        } catch (err) { showNotif("Erreur ! ❌"); }
+        } catch (err) { showNotif("ERR ❌"); }
     }
 
     async function createNewFile() {
-        if (!rootHandle) return showNotif("Ouvrez d'abord un espace.");
-        let n = prompt("Nom du nouveau fichier :");
+        if (!rootHandle) return showNotif("Open a space first!");
+        let n = prompt("File Name: ");
         if (n) { 
             if (!n.includes('.')) n += '.md';
             await rootHandle.getFileHandle(n, { create: true }); 
@@ -575,15 +585,15 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     }
 
     async function createNewFolder() {
-        if (!rootHandle) return showNotif("Ouvrez d'abord un espace.");
-        const name = prompt("Nom du nouveau dossier :");
+        if (!rootHandle) return showNotif("Open a space first!");
+        const name = prompt("Folder Name:");
         if (name) {
             try {
                 await rootHandle.getDirectoryHandle(name, { create: true });
                 renderTree(); 
-                showNotif("Repertoire créé.");
+                showNotif("Folder Created.");
             } catch (err) {
-                alert("Erreur de création. Le nom existe déjà ou est invalide.");
+                alert("ERR - Name is *exists or *invalid.");
             }
         }
     }
@@ -646,6 +656,70 @@ window.addEventListener("load", () => {
     }
 
 })
+
+document.addEventListener('DOMContentLoaded', () => {
+    const languageSelect = document.getElementById('language-select');
+
+    // Load the selected language from localStorage if available
+    const savedLanguage = localStorage.getItem('selectedLanguage');
+    if (savedLanguage) {
+        languageSelect.value = savedLanguage;
+        updateLanguage(savedLanguage);
+    }
+
+    languageSelect.addEventListener('change', (event) => {
+        const selectedLanguage = event.target.value;
+        updateLanguage(selectedLanguage);
+        localStorage.setItem('selectedLanguage', selectedLanguage); // Save the selected language
+    });
+});
+
+function updateLanguage(language) {
+    // This function should update the text content of the page based on the selected language
+    // For example, you can use a translation library or manually update the text
+    const translations = {
+        en: {
+            'settings': 'Preferences',
+            'opsettings': 'Open Settings',
+            'opfloating': 'Enable Floating mode',
+            'checkoutgit': 'Check out the github to learn how to create your own themes!',
+            'madewithlove': 'Made with love by aalllaaass and friends...',
+            'newfile': '📄 New file',
+            'newdir': '📂 New Folder',
+            'opspace': '📁 Open Space',
+            'themes': 'Themes',
+            'lezgo': 'Let‘s boogie!',
+            'renamecont': '✏️ Rename',
+            'deletecont': '🗑️ Delete',
+            'saving': 'Saving...',
+            // copy paste the difs to retranslate to french
+        },
+        fr: {
+            'settings': 'Réglages',
+            'opsettings': 'Ouvrir Les Réglages',
+            'opfloating': 'Activer le flotteur',
+            'checkoutgit': 'Allez voir le github pour apprendre à créer vos propres thèmes!',
+            'madewithlove': 'Fait avec amour par aalllaaasss & friends...',
+            'newfile': '📄 Nouveau Fichier',
+            'newdir': '📂 Nouveau Dossier',
+            'opspace': '📁 Ouvrir Un Éspace',
+            'themes': 'Thèmes',
+            'lezgo': 'Let‘s boogie!',
+            'renamecont': '✏️ Renomer',
+            'deletecont': '🗑️ Supprimer',
+            'saving': 'Saving...',
+        }
+    };
+
+    const elementsToUpdate = document.querySelectorAll('[data-i18n]');
+    elementsToUpdate.forEach((element) => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[language][key]) {
+            element.textContent = translations[language][key];
+        }
+    });
+}
+
 
 </script>
 </body>
