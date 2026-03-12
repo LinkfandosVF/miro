@@ -574,7 +574,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             showNotif(silent ? "Document auto-enregistré ✨" : "Document enregistré ! ✨");
             if (!silent) {
                 const b = document.getElementById('btn-save'); b.innerText = "✨ OK";
-                setTimeout(() => b.innerText = "💾 Sauvegarder", 1500);
+                setTimeout(() => b.innerText = "💾", 1500);
             }
         } catch (err) { showNotif("ERR ❌"); }
     }
