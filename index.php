@@ -709,7 +709,7 @@ function updateLanguage(language) {
             'madewithlove': 'Fait avec amour par aalllaaasss & friends...',
             'newfile': '📄 Nouveau Fichier',
             'newdir': '📂 Nouveau Dossier',
-            'opspace': '📁 Ouvrir Un Éspace',
+            'opspace': '📁 Ouvrir Un Espace',
             'themes': 'Thèmes',
             'lezgo': 'Let‘s boogie!',
             'renamecont': '✏️ Renomer',
