@@ -1,4 +1,6 @@
 # Miro
+![GitHub commit merge status](https://img.shields.io/github/commit-status/LinkfandosVF/miro/main/721e7360881e10cf5779a02882a6296580473732)![GitHub last commit](https://img.shields.io/github/last-commit/LinkfandosVF/miro)![GitHub Release Date](https://img.shields.io/github/release-date-pre/LinkfandosVF/miro?label=last%20devrelease)![GitHub Release Date](https://img.shields.io/github/release-date/LinkfandosVF/miro?label=last%20public%20release)
+
 
 Cute Markdown note taking app written in php... might compile later idk
 ### Fundamentally,
