@@ -75,7 +75,7 @@
         .folder { font-weight: bold; margin-top: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 4px; border-radius: 4px; }
         .folder:hover { background: rgba(128,128,128,0.1); }
         .folder.drag-over { background: rgba(0, 122, 204, 0.3); border: 1px dashed #007acc; }
-        .CodeMirror-wrap pre.CodeMirror-line {word-break: break-all; overflow-wrap: break-word;}
+        .CodeMirror-wrap pre.CodeMirror-line {word-break: normal; overflow-wrap: break-word;}
         .editor-preview, .editor-preview-side { background-color: var(--dynamic-bg) !important; color: inherit !important; height: 100% !important; border: none !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; z-index: 10; padding: 15px; box-sizing: border-box; }
         .editor-preview *, .editor-preview-side * { color: inherit !important; background-color: transparent !important; }
         #ctx-menu { display: none; position: fixed; border: 1px solid; border-radius: 6px; z-index: 10002; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 13px; font-weight: bold; overflow: hidden; }
