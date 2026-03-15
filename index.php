@@ -86,33 +86,36 @@
         .EasyMDEContainer .CodeMirror {border: inherit;}
 
         
-        /* solid snake ass*/
-        .CodeMirror-line .cm-formatting, 
-        .CodeMirror-line .cm-formatting-header, 
-        .CodeMirror-line .cm-formatting-list, 
-        .CodeMirror-line .cm-formatting-em, 
-        .CodeMirror-line .cm-formatting-strong {
-            display: inline-block !important;
-            opacity: 0 !important;
-            width: 0 !important;
-            letter-spacing: -1em !important;
-            transition: all 0.2s ease-in-out !important;
-            pointer-events: none;
-            overflow: hidden;
-            vertical-align: middle;
-        }
+    /* solid snake ass */
+    .CodeMirror-line .cm-formatting-header, 
+    .CodeMirror-line .cm-formatting-em, 
+    .CodeMirror-line .cm-formatting-strong {
+        display: inline-block !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        letter-spacing: -1em !important;
+        transition: all 0.2s ease-in-out !important;
+        pointer-events: none;
+        overflow: hidden;
+        vertical-align: middle;
+    }
 
-        /* Js on the cursor */
-        .CodeMirror-line.show-markers .cm-formatting,
-        .CodeMirror-line.show-markers .cm-formatting-header,
-        .CodeMirror-line.show-markers .cm-formatting-list,
-        .CodeMirror-line.show-markers .cm-formatting-em,
-        .CodeMirror-line.show-markers .cm-formatting-strong {
-            opacity: 0.6 !important;
-            width: auto !important;
-            letter-spacing: normal !important;
-            pointer-events: auto;
-        }
+    .CodeMirror-line .cm-formatting-list {
+        opacity: 0.8 !important; /* Visible mais du coup non */
+        width: auto !important;
+        letter-spacing: normal !important;
+    }
+
+    .CodeMirror-line.show-markers .cm-formatting-header,
+    .CodeMirror-line.show-markers .cm-formatting-em,
+    .CodeMirror-line.show-markers .cm-formatting-strong {
+        opacity: 0.6 !important;
+        width: auto !important;
+        letter-spacing: normal !important;
+        pointer-events: auto;
+    }
+
+        
 
 
 
