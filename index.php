@@ -115,7 +115,21 @@
         pointer-events: auto;
     }
 
-        
+    .cm-s-easymde .cm-link {
+    color: inherit !important; /* liens */
+    text-decoration: underline;
+    cursor: pointer;
+}
+.cm-s-easymde .cm-url {
+    color: inherit !important;
+    opacity: 0.5;
+    font-size: 0.9em;
+}
+
+.CodeMirror-line:not(.show-markers) .cm-formatting-link,
+.CodeMirror-line:not(.show-markers) .cm-url {
+    display: none;
+}
 
 
 
@@ -320,6 +334,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 
         easyMDE = new EasyMDE({ 
             element: document.getElementById('my-editor'),
+            
             spellChecker: false, 
             autofocus: true, 
             forceSync: true,
@@ -327,6 +342,26 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "preview", "|", "guide"]
         });
 
+        if (easyMDE && easyMDE.codemirror) {
+    const cm = easyMDE.codemirror;
+    
+    cm.getWrapperElement().addEventListener("mousedown", (e) => {
+        if (e.ctrlKey || e.metaKey) {
+            const pos = cm.coordsChar({ left: e.clientX, top: e.clientY });
+            const token = cm.getTokenAt(pos);
+
+            if (token.type && (token.type.includes("url") || token.type.includes("link"))) {
+                let url = token.string.replace(/[()\[\]]/g, "").trim();
+                
+                if (url) {
+                    // adds http when url is fucked up
+                    const finalUrl = url.startsWith("http") ? url : "https://" + url;
+                    window.open(finalUrl, "_blank");
+                }
+            }
+        }
+    }, true); // Le "true" est important pour capturer l'évenement avant CodeMirror
+}
         easyMDE.codemirror.on("cursorActivity", (cm) => {
             cm.eachLine(line => {
                 const info = cm.lineInfo(line);
