@@ -238,6 +238,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     <h2 style="margin-top:0; color:#007acc;" data-i18n="settings">Préférences</h2>
     <p data-i18n="opsettings"><b>⌘</b> Ouvre les réglages</p>
     <p data-i18n="opfloating"><b>⎋</b> Active le flotteur</p>
+    <p data-i18n="cmdclick">Maintenez Contrôle (ou CMD sur mac) et cliquez sur un lien pour l'ouvrir.</p>
     <h2 style="margin-top:0; color:#007acc;">---</h2>
     <label style="font-size: 15px; cursor:pointer; opacity: 100%; align-items: center; display: flex;"><input type="checkbox" id="autosave-toggle" checked><p data-i18n="autosavefeature">Sauvegarde Auto</p></label>
     <p data-i18n="autosavetooltip" style="font-size: 11px">tooltip</p>
@@ -737,6 +738,7 @@ function updateLanguage(language) {
             'saving': 'Saving...',
             'autosavefeature': 'Automatic save',
             'autosavetooltip': 'Saves your document when you stop writing.',
+            'cmdclick': 'Hold Control(or CMD on mac) and click a link to open it.',
             // copy paste the difs to retranslate to french
         },
         fr: {
@@ -755,6 +757,7 @@ function updateLanguage(language) {
             'saving': 'Saving...',
             'autosavefeature': 'Sauvegarde auto',
             'autosavetooltip': 'Sauvegarde votre document quand vous arrètez d‘écrire.',
+            'cmdclick': 'Maintenez Contrôle (ou CMD sur mac) et cliquez sur un lien pour l‘ouvrir.',
         }
     };
 
