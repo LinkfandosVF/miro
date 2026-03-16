@@ -43,13 +43,13 @@
         .sidebar-brand { padding: 15px; font-size: 1.1rem; font-weight: bold; color: #007acc; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; align-items: center; gap: 10px; }
         .sidebar-header { padding: 15px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; flex-direction: column; gap: 8px; }
 #file-tree {
-    flex-grow: 1;      /* Prend tout l'espace restant */
-    overflow-y: auto !important; /* Autorise le scroll ici */
-    min-height: 0;     /* TRÈS IMPORTANT : permet au flex-item de rétrécir sous son contenu */
+    flex-grow: 1;
+    overflow-y: auto !important;
+    min-height: 0;
     padding: 10px;
 }
        .sidebar-footer {
-    flex-shrink: 0;    /* Reste en bas sans s'écraser */
+    flex-shrink: 0;
     padding: 12px;
     display: flex;
     justify-content: space-between;
@@ -62,6 +62,17 @@
         #sidebar-mode-toggle { background: #007acc; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; font-weight: bold; }
         #help-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 25px; border-radius: 8px; z-index: 10000; width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border-style: solid; border-width: 1px; }
         #help-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 9999; }
+        #restore-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index: 10003; align-items: center; justify-content: center; }
+        #restore-overlay.show { display: flex; }
+        #restore-modal { background: #252526; color: #d4d4d4; border: 1px solid #444; border-radius: 12px; padding: 30px; width: 340px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        body.theme-light #restore-modal { background: #ffffff; color: #1e1e1e; border-color: #ccc; }
+        #restore-modal .restore-icon { font-size: 40px; margin-bottom: 12px; }
+        #restore-modal h3 { margin: 0 0 8px; color: #007acc; font-size: 1.1rem; }
+        #restore-modal p { margin: 0 0 20px; font-size: 13px; opacity: 0.7; line-height: 1.5; }
+        #restore-modal .restore-btn { width: 100%; padding: 12px; background: #007acc; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
+        #restore-modal .restore-btn:hover { background: #005f9e; }
+        #restore-modal .restore-skip { width: 100%; padding: 8px; background: transparent; color: inherit; border: 1px solid rgba(128,128,128,0.3); border-radius: 8px; font-size: 13px; cursor: pointer; opacity: 0.6; }
+        #restore-modal .restore-skip:hover { opacity: 1; }
         #notif { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); padding: 10px 25px; background: #007acc; color: white; border-radius: 30px; font-size: 13px; font-weight: bold; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10001; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         #notif.show { transform: translate(-50%, 0); }
         #editor-container { flex: 1; display: flex; flex-direction: column; padding: 10px; background: transparent; position: relative; min-width: 0; }
@@ -101,7 +112,7 @@
     }
 
     .CodeMirror-line .cm-formatting-list {
-        opacity: 0.8 !important; /* Visible mais du coup non */
+        opacity: 0.8 !important;
         width: auto !important;
         letter-spacing: normal !important;
     }
@@ -116,7 +127,7 @@
     }
 
     .cm-s-easymde .cm-link {
-    color: inherit !important; /* liens */
+    color: inherit !important;
     text-decoration: underline;
     cursor: pointer;
 }
@@ -240,11 +251,19 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     <p data-i18n="opfloating"><b>⎋</b> Active le flotteur</p>
     <p data-i18n="cmdclick">Maintenez Contrôle (ou CMD sur mac) et cliquez sur un lien pour l'ouvrir.</p>
     <h2 style="margin-top:0; color:#007acc;">---</h2>
-    <label style="font-size: 15px; cursor:pointer; opacity: 100%; align-items: center; display: flex;"><input type="checkbox" id="autosave-toggle" checked><p data-i18n="autosavefeature">Sauvegarde Auto</p></label>
+    <label style="font-size: 15px; cursor:pointer; opacity: 100%; align-items: center; display: flex;">
+        <input type="checkbox" id="autosave-toggle" checked>
+        <p data-i18n="autosavefeature" style="margin-left: 8px;">Sauvegarde Auto</p>
+    </label>
     <p data-i18n="autosavetooltip" style="font-size: 11px">tooltip</p>
+    <label style="font-size: 15px; cursor:pointer; align-items: center; display: flex;">
+        <input type="checkbox" id="notif-toggle" checked>
+        <p style="margin-left: 8px;" data-i18n="savenotif">Notifications De Sauvegarde</p>
+    </label>
+    <p data-i18n="savenotiftooltip" style="font-size: 11px">tooltip2</p>
     <br>
     <br>
-    <p data-i18n="themes" style="font-weight: bold; color:#007acc">themes<p>
+    <p data-i18n="themes" style="font-weight: bold; color:#007acc">themes</p>
     <label></label> 
     <select id="theme-selector" onchange="changeTheme(this.value)">
                     <option value="light">☀️ Clair</option>
@@ -267,17 +286,26 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     <select id="language-select">
         <option value="fr">French - Français (Par défaut)</option>
         <option value="en">English - Anglais</option>
-        <!-- Add more languages as needed -->
     </select>
     </div>
-    <button onclick="toggleHelp()" style="width: 100%; margin-top: 10px; background: #007acc; color: white;">Gotcha</button>
+    <button onclick="toggleHelp()" style="width: 100%; margin-top: 10px; background: #007acc; color: white;">Let's Boogie!</button>
     <p style="font-size: 11px; text-align: center" data-i18n="madewithlove">Fait avec amour par aalllaaasss & friends...</p>
 </div>
 
-<div id="notif" ata-i18n="saving">Sauvegarde...</div>
+<div id="restore-overlay">
+    <div id="restore-modal">
+        <div class="restore-icon">📁</div>
+        <h3 id="restore-folder-name">Mon Espace</h3>
+        <p>Chromium a besoin de votre autorisation pour accéder à nouveau au dossier.</p>
+        <button class="restore-btn" onclick="restoreSpace()">🔓 Réautoriser l'accès</button>
+        <button class="restore-skip" onclick="dismissRestore()">Ignorer</button>
+    </div>
+</div>
+
+<div id="notif">Sauvegarde...</div>
 <div id="ctx-menu">
-    <div id="ctx-rename" ata-i18n="renamecont">✏️ Rename</div>
-    <div id="ctx-delete" ata-i18n="deletecont">🗑️ Delete</div>
+    <div id="ctx-rename">✏️ Rename</div>
+    <div id="ctx-delete">🗑️ Delete</div>
 </div>
 
 <div id="sidebar">
@@ -289,6 +317,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             <button id="btn-open-dir" onclick="pickDirectory()" data-i18n="opspace">📁 Ouvrir Un Espace</button>
             <button onclick="createNewFile()" data-i18n="newfile">📄 Nouveau Fichier</button>
             <button onclick="createNewFolder()" data-i18n="newdir">📂 Nouveau Dossier</button>
+            <button class="help-btn" onclick="collapseAllFolders()">⛺︎</button>
         </div>
     </div>
 
@@ -306,7 +335,6 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         </div>
     </div>
 </div>
-</div>
 
 <div id="editor-container">
     <div>
@@ -321,6 +349,104 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 
 <script src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd/idb-keyval-iife.min.js"></script>
 <script>
+
+    // ===========================
+    // TRADUCTIONS (global, en premier)
+    // ===========================
+    const allTranslations = {
+        en: {
+            'settings': 'Preferences',
+            'opsettings': '⌘ Open Settings',
+            'opfloating': '⎋ Enable Floating mode',
+            'checkoutgit': 'Check out the github to learn how to create your own themes!',
+            'madewithlove': 'Made with love by aalllaaass and friends...',
+            'newfile': '📄 New file',
+            'newdir': '📂 New Folder',
+            'opspace': '📁 Open Space',
+            'themes': 'Themes',
+            'lezgo': "Let's boogie!",
+            'renamecont': '✏️ Rename',
+            'deletecont': '🗑️ Delete',
+            'autosavefeature': 'Automatic save',
+            'autosavetooltip': 'Saves your document when you stop writing.',
+            'cmdclick': 'Hold Control (or CMD on mac) and click a link to open it.',
+            'savenotiftooltip': 'Displays a notification when you save the document.',
+            'savenotif': 'Save notification',
+            'notif_saving': 'Saving...',
+            'notif_saved': 'Document saved.',
+            'notif_autosaved': 'Document auto-saved.',
+            'err': 'ERR: Check JS Console.',
+            'notif_collapsed': 'Space collapsed.',
+            'notif_newfolder': 'Folder created.',
+            'notif_openaspace': 'Open a space first!',
+            'notif_deleted': 'Item deleted',
+            'notif_delete_err': 'Delete error',
+            'notif_renamed': 'File renamed',
+            'notif_rename_err': 'Rename error',
+            'notif_rename_dir': 'Cannot rename a folder.',
+            'notif_move_err': 'Move error',
+            'notif_restored': 'Space restored.',
+        },
+        fr: {
+            'settings': 'Réglages',
+            'opsettings': '⌘ Ouvrir Les Réglages',
+            'opfloating': '⎋ Activer le flotteur',
+            'checkoutgit': 'Allez voir le github pour apprendre à créer vos propres thèmes!',
+            'madewithlove': 'Fait avec amour par aalllaaasss & friends...',
+            'newfile': '📄 Nouveau Fichier',
+            'newdir': '📂 Nouveau Dossier',
+            'opspace': '📁 Ouvrir Un Espace',
+            'themes': 'Thèmes',
+            'lezgo': "Let's boogie!",
+            'renamecont': '✏️ Renommer',
+            'deletecont': '🗑️ Supprimer',
+            'autosavefeature': 'Sauvegarde auto',
+            'autosavetooltip': "Sauvegarde votre document quand vous arrêtez d'écrire.",
+            'cmdclick': "Maintenez Contrôle (ou CMD sur mac) et cliquez sur un lien pour l'ouvrir.",
+            'savenotiftooltip': 'Vous notifie lorsque le document est sauvegardé.',
+            'savenotif': 'Notifications de Sauvegarde',
+            'notif_saving': 'Sauvegarde...',
+            'notif_saved': 'Document enregistré.',
+            'notif_autosaved': 'Document auto-enregistré.',
+            'err': 'ERR ❌ - Verifiez la console.',
+            'notif_collapsed': 'Espace replié.',
+            'notif_newfolder': 'Dossier créé.',
+            'notif_openaspace': 'Ouvrez un espace en premier !',
+            'notif_deleted': 'Élément supprimé',
+            'notif_delete_err': 'Erreur de suppression... :C',
+            'notif_renamed': 'Fichier renommé',
+            'notif_rename_err': 'Erreur de renommage',
+            'notif_rename_dir': 'Impossible de renommer le dossier... :C',
+            'notif_move_err': 'Erreur de déplacement',
+            'notif_restored': 'Espace restauré!',
+        }
+    };
+
+    function getTranslatedText(key) {
+        const lang = localStorage.getItem('selectedLanguage') || 'fr';
+        return (allTranslations[lang] && allTranslations[lang][key]) ? allTranslations[lang][key] : key;
+    }
+
+    function showNotif(textOrKey, duration = 2000) {
+        const n = document.getElementById('notif');
+        n.innerText = getTranslatedText(textOrKey);
+        n.classList.add('show');
+        if (duration > 0) setTimeout(() => n.classList.remove('show'), duration);
+    }
+
+    function updateLanguage(language) {
+        const elementsToUpdate = document.querySelectorAll('[data-i18n]');
+        elementsToUpdate.forEach((element) => {
+            const key = element.getAttribute('data-i18n');
+            if (allTranslations[language] && allTranslations[language][key]) {
+                element.textContent = allTranslations[language][key];
+            }
+        });
+    }
+
+    // ===========================
+    // VARIABLES GLOBALES
+    // ===========================
     let easyMDE, rootHandle, currentFileHandle, autoSaveTimeout;
     let collapsedFolders = new Set();
     let draggedItem = null;
@@ -329,13 +455,21 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     const loadingTexts = ["ON PRÉPARE LES TRUCS BIEN...", "OUVERTURE DE C'TRUC...", "ON NÉTTOIE LES PINCEAUX...", "OUVERTURE DE MIRO...", "ENTRÉE DANS LA PEINTURE...", "RÉCUPÉRATION DE MONOCO...", "APPLICATIONS DES DROITS TRANS...", "ON BRANDIS LES DRAPEAUX TRANS...", "ON BRANDIS LES DRAPEAUX LGBTQ+...", "ON RÉVEILLE LE CAMÉLÉON...", "ON RÉVEILLE LEXULATHU'AL...", "DES BISOUX POUR LES SUPPORTERS...", "ON NETTOIE LES DOSSIERS...", "PEINDRE L'AMOUR...", "PEINDRE LA VIE...", "PLEURER EN COULEUR...", "SUR LA TOILE NOTRE VIE S'ÉCRIT...", "ON RÉCUP LA HOMIE SALOMÉ..."];
     const loadingTexts2 = ["Mirqo c'est le nom d'un très bon chien!", "Bientôt on ferra bien plus que jeter des cailloux.", "J'avais beaucoup de temps à perdre!", "Rebonjour!", "Merci de t'amuser!", "Hein? C'est quoi deez?", "On respectera toujours votre vie privée!", "Cryptid crush c'était mieux avant.", "Salut Romy!", "Salut Dominik!", "Salut Craze!", "Salut Sim!", "La paix pour tous... C'est quand?", "Continuer à t'aimer, continuer de peindre...", "Tout ça dans un seul fichier php?","Hi Grey!!!!!! :33","J'ai plus d'idée de sous titre.","SALOMÉ COUCOUUUUU!!!!!!!"];
 
+    // ===========================
+    // INIT
+    // ===========================
     window.onload = async () => {
         document.getElementById('splash-title').innerText = loadingTexts[Math.floor(Math.random() * loadingTexts.length)];
         document.getElementById('splash-subtitle').innerText = loadingTexts2[Math.floor(Math.random() * loadingTexts2.length)];
 
+        const notifToggle = document.getElementById('notif-toggle');
+        notifToggle.checked = localStorage.getItem('notif-enabled') !== 'false';
+        notifToggle.addEventListener('change', (e) => {
+            localStorage.setItem('notif-enabled', e.target.checked);
+        });
+
         easyMDE = new EasyMDE({ 
             element: document.getElementById('my-editor'),
-            
             spellChecker: false, 
             autofocus: true, 
             forceSync: true,
@@ -344,33 +478,29 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         });
 
         if (easyMDE && easyMDE.codemirror) {
-    const cm = easyMDE.codemirror;
-    
-    cm.getWrapperElement().addEventListener("mousedown", (e) => {
-        if (e.ctrlKey || e.metaKey) {
-            const pos = cm.coordsChar({ left: e.clientX, top: e.clientY });
-            const token = cm.getTokenAt(pos);
-
-            if (token.type && (token.type.includes("url") || token.type.includes("link"))) {
-                let url = token.string.replace(/[()\[\]]/g, "").trim();
-                
-                if (url) {
-                    // adds http when url is fucked up
-                    const finalUrl = url.startsWith("http") ? url : "https://" + url;
-                    window.open(finalUrl, "_blank");
+            const cm = easyMDE.codemirror;
+            
+            cm.getWrapperElement().addEventListener("mousedown", (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    const pos = cm.coordsChar({ left: e.clientX, top: e.clientY });
+                    const token = cm.getTokenAt(pos);
+                    if (token.type && (token.type.includes("url") || token.type.includes("link"))) {
+                        let url = token.string.replace(/[()\[\]]/g, "").trim();
+                        if (url) {
+                            const finalUrl = url.startsWith("http") ? url : "https://" + url;
+                            window.open(finalUrl, "_blank");
+                        }
+                    }
                 }
-            }
+            }, true);
         }
-    }, true); // Le "true" est important pour capturer l'évenement avant CodeMirror
-}
+
         easyMDE.codemirror.on("cursorActivity", (cm) => {
             cm.eachLine(line => {
                 const info = cm.lineInfo(line);
-                if (info.handle.widgets) return; // ignore widgets
+                if (info.handle.widgets) return;
                 cm.removeLineClass(line, "text", "show-markers");
             });
-
-            // Adding the class on the cursor
             const currentLine = cm.getCursor().line;
             cm.addLineClass(currentLine, "text", "show-markers");
         });
@@ -395,9 +525,9 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                         document.getElementById('current-filename').innerText = "📍 Ready.";
                         currentFileHandle = null;
                     }
-                    showNotif("Élément supprimé");
+                    showNotif('notif_deleted');
                     renderTree();
-                } catch (e) { showNotif("Erreur de suppression"); }
+                } catch (e) { showNotif('notif_delete_err'); }
             }
         });
 
@@ -405,7 +535,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             ev.stopPropagation();
             document.getElementById('ctx-menu').style.display = 'none';
             if (ctxTarget) {
-                if (ctxTarget.kind === 'directory') return showNotif("Impossible de renommer un dossier.");
+                if (ctxTarget.kind === 'directory') return showNotif('notif_rename_dir');
                 let newName = prompt("Nouveau nom :", ctxTarget.name);
                 if (newName && newName !== ctxTarget.name) {
                     if (!newName.includes('.')) newName += '.md';
@@ -421,9 +551,9 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                             currentFileHandle = newHandle;
                             document.getElementById('current-filename').innerText = "➤ " + newHandle.name;
                         }
-                        showNotif("Fichier renommé");
+                        showNotif('notif_renamed');
                         renderTree();
-                    } catch (e) { showNotif("Erreur de renommage"); }
+                    } catch (e) { showNotif('notif_rename_err'); }
                 }
             }
         });
@@ -437,11 +567,9 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                 const storedHandle = await db.get('root-handle');
                 if (storedHandle) {
                     rootHandle = storedHandle;
-                    document.getElementById('file-tree').innerHTML = `
-                        <div style='padding:15px; text-align:center;'>
-                            <button onclick="verifyPermission()" style="width:100%; background:#007acc; color:white; font-weight:bold; padding:12px;">🔓 Restaurer l'espace</button>
-                            <p style='font-size:11px; opacity:0.6; margin-top:8px;'>Requis par le navigateur pour l'accès local.</p>
-                        </div>`;
+                    // Affiche le nom du dossier dans le popup
+                    document.getElementById('restore-folder-name').innerText = '📂 ' + storedHandle.name;
+                    document.getElementById('restore-overlay').classList.add('show');
                 }
             }
         } catch (e) {}
@@ -452,6 +580,9 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         }, 1800);
     };
 
+    // ===========================
+    // THEME
+    // ===========================
     function changeTheme(val) {
         const body = document.body;
         const link = document.getElementById('theme-link');
@@ -486,6 +617,9 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         localStorage.setItem('obsidian-theme', val);
     }
 
+    // ===========================
+    // FICHIERS
+    // ===========================
     async function pickDirectory() {
         try { 
             rootHandle = await window.showDirectoryPicker();
@@ -498,6 +632,23 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         if (!rootHandle) return;
         const status = await rootHandle.requestPermission({mode: 'readwrite'});
         if (status === 'granted') await renderTree();
+    }
+
+    async function restoreSpace() {
+        document.getElementById('restore-overlay').classList.remove('show');
+        if (!rootHandle) return;
+        try {
+            const status = await rootHandle.requestPermission({ mode: 'readwrite' });
+            if (status === 'granted') {
+                await renderTree();
+                showNotif('notif_restored');
+            }
+        } catch (e) {}
+    }
+
+    function dismissRestore() {
+        document.getElementById('restore-overlay').classList.remove('show');
+        rootHandle = null;
     }
 
     async function renderTree() {
@@ -564,7 +715,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                             await draggedItem.parent.removeEntry(draggedItem.name);
                             if (currentFileHandle && currentFileHandle.name === draggedItem.name) currentFileHandle = newHandle;
                             renderTree();
-                        } catch (err) { showNotif("Erreur de déplacement"); }
+                        } catch (err) { showNotif('notif_move_err'); }
                     }
                 };
 
@@ -605,21 +756,30 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 
     async function saveCurrentFile(silent = false) {
         if (!currentFileHandle) return;
-        if (!silent) showNotif("Sauvegarde...");
+        
+        const showNotifsEnabled = document.getElementById('notif-toggle').checked;
+
+        if (!silent && showNotifsEnabled) showNotif('notif_saving');
+
         try {
             const w = await currentFileHandle.createWritable();
             await w.write(easyMDE.value());
             await w.close();
-            showNotif(silent ? "Document auto-enregistré ✨" : "Document enregistré ! ✨");
+            if (showNotifsEnabled) {
+                showNotif(silent ? 'notif_autosaved' : 'notif_saved');
+            }
             if (!silent) {
-                const b = document.getElementById('btn-save'); b.innerText = "✨ OK";
+                const b = document.getElementById('btn-save'); 
+                b.innerText = "✨ OK";
                 setTimeout(() => b.innerText = "💾", 1500);
             }
-        } catch (err) { showNotif("ERR ❌"); }
+        } catch (err) { 
+            showNotif('err'); 
+        }
     }
 
     async function createNewFile() {
-        if (!rootHandle) return showNotif("Open a space first!");
+        if (!rootHandle) return showNotif('notif_openaspace');
         let n = prompt("File Name: ");
         if (n) { 
             if (!n.includes('.')) n += '.md';
@@ -629,23 +789,35 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     }
 
     async function createNewFolder() {
-        if (!rootHandle) return showNotif("Open a space first!");
+        if (!rootHandle) return showNotif('notif_openaspace');
         const name = prompt("Folder Name:");
         if (name) {
             try {
                 await rootHandle.getDirectoryHandle(name, { create: true });
                 renderTree(); 
-                showNotif("Folder Created.");
+                showNotif('notif_newfolder');
             } catch (err) {
-                alert("ERR - Name is *exists or *invalid.");
+                showNotif('err');
             }
         }
     }
 
-    function showNotif(text, duration = 2000) {
-        const n = document.getElementById('notif');
-        n.innerText = text; n.classList.add('show');
-        if (duration > 0) setTimeout(() => n.classList.remove('show'), duration);
+    async function collapseAllFolders() {
+        if (!rootHandle) return;
+
+        const fillCollapsed = async (handle, path = "") => {
+            for await (const entry of handle.values()) {
+                if (entry.kind === 'directory') {
+                    const currentPath = path + "/" + entry.name;
+                    collapsedFolders.add(currentPath); 
+                    await fillCollapsed(entry, currentPath);
+                }
+            }
+        };
+
+        await fillCollapsed(rootHandle);
+        renderTree();
+        showNotif('notif_collapsed');
     }
 
     function toggleHelp() {
@@ -661,115 +833,60 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); createNewFile(); }
     });
 
+    // ===========================
+    // SIDEBAR FLOATING MODE
+    // ===========================
+    window.addEventListener("load", () => {
+        const sidebarToggle = document.getElementById("sidebar-mode-toggle");
+        const sidebarEdge = document.getElementById("sidebar-edge-trigger");
+        const sidebarTouch = document.getElementById("sidebar-touch-button");
+        const sidebar = document.getElementById("sidebar");
 
-/* ============================= */
-/* SIDEBAR FLOATING MODE */
-/* ============================= */
+        if (!sidebar || !sidebarEdge) return;
 
-window.addEventListener("load", () => {
-
-    const sidebarToggle = document.getElementById("sidebar-mode-toggle")
-    const sidebarEdge = document.getElementById("sidebar-edge-trigger")
-    const sidebarTouch = document.getElementById("sidebar-touch-button")
-    const sidebar = document.getElementById("sidebar")
-
-    if(!sidebar || !sidebarEdge) return
-
-    if(sidebarToggle){
-        sidebarToggle.onclick = () => {
-            document.body.classList.toggle("sidebar-floating")
+        if (sidebarToggle) {
+            sidebarToggle.onclick = () => {
+                document.body.classList.toggle("sidebar-floating");
+            };
         }
-    }
 
-    function showSidebar(){
-        document.body.classList.remove("sidebar-hidden")
-    }
-
-    function hideSidebar(){
-        if(document.body.classList.contains("sidebar-floating"))
-            document.body.classList.add("sidebar-hidden")
-    }
-
-    sidebarEdge.addEventListener("mouseenter", showSidebar)
-    sidebar.addEventListener("mouseleave", hideSidebar)
-
-    if(sidebarTouch){
-        sidebarTouch.onclick = () => {
-            document.body.classList.toggle("sidebar-hidden")
+        function showSidebar() {
+            document.body.classList.remove("sidebar-hidden");
         }
-    }
 
-})
-
-document.addEventListener('DOMContentLoaded', () => {
-    const languageSelect = document.getElementById('language-select');
-
-    // Load the selected language from localStorage if available
-    const savedLanguage = localStorage.getItem('selectedLanguage');
-    if (savedLanguage) {
-        languageSelect.value = savedLanguage;
-        updateLanguage(savedLanguage);
-    }
-
-    languageSelect.addEventListener('change', (event) => {
-        const selectedLanguage = event.target.value;
-        updateLanguage(selectedLanguage);
-        localStorage.setItem('selectedLanguage', selectedLanguage); // Save the selected language
-    });
-});
-
-function updateLanguage(language) {
-    // This function should update the text content of the page based on the selected language
-    // For example, you can use a translation library or manually update the text
-    const translations = {
-        en: {
-            'settings': 'Preferences',
-            'opsettings': '⌘ Open Settings',
-            'opfloating': '⎋ Enable Floating mode',
-            'checkoutgit': 'Check out the github to learn how to create your own themes!',
-            'madewithlove': 'Made with love by aalllaaass and friends...',
-            'newfile': '📄 New file',
-            'newdir': '📂 New Folder',
-            'opspace': '📁 Open Space',
-            'themes': 'Themes',
-            'lezgo': 'Let‘s boogie!',
-            'renamecont': '✏️ Rename',
-            'deletecont': '🗑️ Delete',
-            'saving': 'Saving...',
-            'autosavefeature': 'Automatic save',
-            'autosavetooltip': 'Saves your document when you stop writing.',
-            'cmdclick': 'Hold Control(or CMD on mac) and click a link to open it.',
-            // copy paste the difs to retranslate to french
-        },
-        fr: {
-            'settings': 'Réglages',
-            'opsettings': '⌘ Ouvrir Les Réglages',
-            'opfloating': '⎋ Activer le flotteur',
-            'checkoutgit': 'Allez voir le github pour apprendre à créer vos propres thèmes!',
-            'madewithlove': 'Fait avec amour par aalllaaasss & friends...',
-            'newfile': '📄 Nouveau Fichier',
-            'newdir': '📂 Nouveau Dossier',
-            'opspace': '📁 Ouvrir Un Espace',
-            'themes': 'Thèmes',
-            'lezgo': 'Let‘s boogie!',
-            'renamecont': '✏️ Renomer',
-            'deletecont': '🗑️ Supprimer',
-            'saving': 'Saving...',
-            'autosavefeature': 'Sauvegarde auto',
-            'autosavetooltip': 'Sauvegarde votre document quand vous arrètez d‘écrire.',
-            'cmdclick': 'Maintenez Contrôle (ou CMD sur mac) et cliquez sur un lien pour l‘ouvrir.',
+        function hideSidebar() {
+            if (document.body.classList.contains("sidebar-floating"))
+                document.body.classList.add("sidebar-hidden");
         }
-    };
 
-    const elementsToUpdate = document.querySelectorAll('[data-i18n]');
-    elementsToUpdate.forEach((element) => {
-        const key = element.getAttribute('data-i18n');
-        if (translations[language][key]) {
-            element.textContent = translations[language][key];
+        sidebarEdge.addEventListener("mouseenter", showSidebar);
+        sidebar.addEventListener("mouseleave", hideSidebar);
+
+        if (sidebarTouch) {
+            sidebarTouch.onclick = () => {
+                document.body.classList.toggle("sidebar-hidden");
+            };
         }
     });
-}
 
+    // ===========================
+    // LANGUE
+    // ===========================
+    document.addEventListener('DOMContentLoaded', () => {
+        const languageSelect = document.getElementById('language-select');
+
+        const savedLanguage = localStorage.getItem('selectedLanguage');
+        if (savedLanguage) {
+            languageSelect.value = savedLanguage;
+            updateLanguage(savedLanguage);
+        }
+
+        languageSelect.addEventListener('change', (event) => {
+            const selectedLanguage = event.target.value;
+            updateLanguage(selectedLanguage);
+            localStorage.setItem('selectedLanguage', selectedLanguage);
+        });
+    });
 
 </script>
 </body>
