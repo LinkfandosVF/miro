@@ -39,12 +39,12 @@ If you simply want to help;
 * ✅ Folder lookout and read
 * ✅ Syncs theme and settings(soon) when u close the app how cool is that
 * 💠 The REAL logo(s)
-* 💠 README
+* ✅ README
 * 💠 Publish as a actual app idk how yet
-* 💠 (?) button with more stuff
-* 💠 Actual english lol
-* 💠 Multi Language support
-* 💠 FIX THE ISSUESSSSSSS
+* ✅ Settings
+* ✅ Actual english lol
+* ✅ Multi Language support
+* ✅ FIX THE ISSUESSSSSSS
 * 💠 Write some docu about forking and creating themes.
 * 💠 Secret mascot (maybe maybe)
 
