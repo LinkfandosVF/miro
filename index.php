@@ -19,6 +19,31 @@
     flex-shrink: 0;
 }
         .wawascroll {flex-grow: 1; overflow-y: auto;}
+        #help-modal { 
+    display: none; 
+    position: fixed; 
+    /* Le secret est ici pour le centrage */
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    
+    padding: 25px; 
+    border-radius: 8px; 
+    z-index: 10000; 
+    width: 400px; 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4); 
+    border-style: solid; 
+    border-width: 1px; 
+    max-height: 80vh;
+    overflow-y: auto; 
+}
+#help-modal::-webkit-scrollbar {
+    width: 6px;
+}
+#help-modal::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0.3);
+    border-radius: 10px;
+}
         body.theme-light { background: #ffffff; color: #1e1e1e; }
         body.theme-light #sidebar { background: #f3f3f3; border-right: 1px solid #ccc; }
         body.theme-light .file-item { color: #1e1e1e; }
@@ -42,19 +67,8 @@
         #sidebar { width: 300px; display: flex; flex-direction: column; justify-content: space-between; z-index: 10; }
         .sidebar-brand { padding: 15px; font-size: 1.1rem; font-weight: bold; color: #007acc; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; align-items: center; gap: 10px; }
         .sidebar-header { padding: 15px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; flex-direction: column; gap: 8px; }
-#file-tree {
-    flex-grow: 1;
-    overflow-y: auto !important;
-    min-height: 0;
-    padding: 10px;
-}
-       .sidebar-footer {
-    flex-shrink: 0;
-    padding: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgba(128,128,128,0.2);
+        #file-tree {flex-grow: 1; overflow-y: auto !important;min-height: 0;padding: 10px;}
+       .sidebar-footer {flex-shrink: 0;padding: 12px;display: flex;justify-content: space-between;align-items: center;border-top: 1px solid rgba(128,128,128,0.2);
 }
         .github-link a { color: inherit; opacity: 0.7; text-decoration: none; font-size: 12px; transition: opacity 0.2s; display: flex; align-items: center; gap: 5px; }
         .github-link a:hover { opacity: 1; }
@@ -89,7 +103,24 @@
         .CodeMirror-wrap pre.CodeMirror-line {word-break: normal; overflow-wrap: break-word;}
         .editor-preview, .editor-preview-side { background-color: var(--dynamic-bg) !important; color: inherit !important; height: 100% !important; border: none !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; z-index: 10; padding: 15px; box-sizing: border-box; }
         .editor-preview *, .editor-preview-side * { color: inherit !important; background-color: transparent !important; }
-        #ctx-menu { display: none; position: fixed; border: 1px solid; border-radius: 6px; z-index: 10002; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 13px; font-weight: bold; overflow: hidden; }
+        #ctx-menu {display: none; position: fixed;border: 1px solid;border-radius: 6px;z-index: 10002;box-shadow: 0 4px 12px rgba(0,0,0,0.2);font-size: 13px;font-weight: bold;overflow: hidden;transform-origin: center;}
+@keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.modal-boing {
+    animation: boing-centered 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes boing-centered { 
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } 
+    50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; } 
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 
+}
+#ctx-menu.animate {
+    display: block; /* On s'assure qu'il est visible pour l'anim */
+    animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
         #ctx-menu div { padding: 8px 12px; cursor: pointer; }
         #ctx-menu div:hover { background: #007acc; color: white; }
         #ctx-delete { color: #ff4d4d !important; }
@@ -200,23 +231,15 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 /* mobile button */
 
 #sidebar-touch-button {
-
     position: fixed;
-
     top: 14px;
     left: 14px;
-
     width: 42px;
     height: 42px;
-
     border-radius: 50%;
-
     background: rgba(0,0,0,0.35);
-
     color: white;
-
     display: none;
-
     z-index: 1200;
 }
 
@@ -234,6 +257,8 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 
 
     </style>
+
+
 </head>
 <body class="theme-dark">
 <div id="sidebar-edge-trigger"></div>
@@ -249,6 +274,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     <h2 style="margin-top:0; color:#007acc;" data-i18n="settings">Préférences</h2>
     <p data-i18n="opsettings"><b>⌘</b> Ouvre les réglages</p>
     <p data-i18n="opfloating"><b>⎋</b> Active le flotteur</p>
+    <p data-i18n="opburry">opburry</p>
     <p data-i18n="cmdclick">Maintenez Contrôle (ou CMD sur mac) et cliquez sur un lien pour l'ouvrir.</p>
     <h2 style="margin-top:0; color:#007acc;">---</h2>
     <label style="font-size: 15px; cursor:pointer; opacity: 100%; align-items: center; display: flex;">
@@ -260,7 +286,12 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         <input type="checkbox" id="notif-toggle" checked>
         <p style="margin-left: 8px;" data-i18n="savenotif">Notifications De Sauvegarde</p>
     </label>
-    <p data-i18n="savenotiftooltip" style="font-size: 11px">tooltip2</p>
+    <p data-i18n="savenotiftooltip" style="font-size: 11px">tooltip</p>
+    <label style="font-size: 15px; cursor:pointer; align-items: center; display: flex;">
+        <input type="checkbox" id="sound-toggle" checked>
+        <p style="margin-left: 8px;" data-i18n="soundtoggle">Sons</p>
+    </label>
+    <p data-i18n="soundtooltip" style="font-size: 11px">tooltip3</p>
     <br>
     <br>
     <p data-i18n="themes" style="font-weight: bold; color:#007acc">themes</p>
@@ -383,14 +414,17 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             'notif_delete_err': 'Delete error',
             'notif_renamed': 'File renamed',
             'notif_rename_err': 'Rename error',
-            'notif_rename_dir': 'Cannot rename a folder.',
+            'notif_rename_dir': 'Cannot rename a folder... Yet :C',
             'notif_move_err': 'Move error',
+            'opburry': '⛺︎ Closes folders in space.',
             'notif_restored': 'Space restored.',
+            'soundtooltip' : 'Toggle funny sounds for the app. (They‘re from Animal Crossing.)'
         },
         fr: {
             'settings': 'Réglages',
             'opsettings': '⌘ Ouvrir Les Réglages',
             'opfloating': '⎋ Activer le flotteur',
+            'opburry': '⛺︎ Replier les dossiers.',
             'checkoutgit': 'Allez voir le github pour apprendre à créer vos propres thèmes!',
             'madewithlove': 'Fait avec amour par aalllaaasss & friends...',
             'newfile': '📄 Nouveau Fichier',
@@ -416,9 +450,10 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             'notif_delete_err': 'Erreur de suppression... :C',
             'notif_renamed': 'Fichier renommé',
             'notif_rename_err': 'Erreur de renommage',
-            'notif_rename_dir': 'Impossible de renommer le dossier... :C',
+            'notif_rename_dir': 'Impossible de renommer un dossier pour l‘instant... :C',
             'notif_move_err': 'Erreur de déplacement',
             'notif_restored': 'Espace restauré!',
+            'soundtooltip' : 'Active des sons rigolos pour l‘application.. (Ils viennent de Animal Crossing.)'
         }
     };
 
@@ -444,9 +479,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         });
     }
 
-    // ===========================
-    // VARIABLES GLOBALES
-    // ===========================
+
     let easyMDE, rootHandle, currentFileHandle, autoSaveTimeout;
     let collapsedFolders = new Set();
     let draggedItem = null;
@@ -455,17 +488,66 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     const loadingTexts = ["ON PRÉPARE LES TRUCS BIEN...", "OUVERTURE DE C'TRUC...", "ON NÉTTOIE LES PINCEAUX...", "OUVERTURE DE MIRO...", "ENTRÉE DANS LA PEINTURE...", "RÉCUPÉRATION DE MONOCO...", "APPLICATIONS DES DROITS TRANS...", "ON BRANDIS LES DRAPEAUX TRANS...", "ON BRANDIS LES DRAPEAUX LGBTQ+...", "ON RÉVEILLE LE CAMÉLÉON...", "ON RÉVEILLE LEXULATHU'AL...", "DES BISOUX POUR LES SUPPORTERS...", "ON NETTOIE LES DOSSIERS...", "PEINDRE L'AMOUR...", "PEINDRE LA VIE...", "PLEURER EN COULEUR...", "SUR LA TOILE NOTRE VIE S'ÉCRIT...", "ON RÉCUP LA HOMIE SALOMÉ..."];
     const loadingTexts2 = ["Mirqo c'est le nom d'un très bon chien!", "Bientôt on ferra bien plus que jeter des cailloux.", "J'avais beaucoup de temps à perdre!", "Rebonjour!", "Merci de t'amuser!", "Hein? C'est quoi deez?", "On respectera toujours votre vie privée!", "Cryptid crush c'était mieux avant.", "Salut Romy!", "Salut Dominik!", "Salut Craze!", "Salut Sim!", "La paix pour tous... C'est quand?", "Continuer à t'aimer, continuer de peindre...", "Tout ça dans un seul fichier php?","Hi Grey!!!!!! :33","J'ai plus d'idée de sous titre.","SALOMÉ COUCOUUUUU!!!!!!!"];
 
-    // ===========================
-    // INIT
-    // ===========================
+
+    // INIT + SOUNDS
+
+    const ctx = new AudioContext();
+
+    async function loadSound(url) {
+    const response = await fetch(url);
+    const buffer = await response.arrayBuffer();
+    return await ctx.decodeAudioData(buffer);
+    }
+
+    function playBuffer(buffer, { volume = 1, playbackRate = 1 } = {}) {
+    const source = ctx.createBufferSource();
+    const gain = ctx.createGain();
+    
+    source.buffer = buffer;
+    source.playbackRate.value = playbackRate; // 0.5 = lent, 2 = rapide
+    gain.gain.value = volume;
+    
+    source.connect(gain);
+    gain.connect(ctx.destination);
+    source.start();
+    }
+
+
+    function playErrorSound(audiotoplay) {
+    // On vérifie l'état du toggle dans le localStorage ou directement sur l'élément
+    const soundsEnabled = localStorage.getItem('sound-enabled') !== 'false';
+    
+    if (soundsEnabled) {
+        const audio = new Audio(audiotoplay);
+        audio.play().catch(e => console.log("Invalid AUDIO url! (or blocked lmao)", e));
+    }
+}
     window.onload = async () => {
         document.getElementById('splash-title').innerText = loadingTexts[Math.floor(Math.random() * loadingTexts.length)];
         document.getElementById('splash-subtitle').innerText = loadingTexts2[Math.floor(Math.random() * loadingTexts2.length)];
 
+        // 1. Initialisation du toggle des notifications
         const notifToggle = document.getElementById('notif-toggle');
         notifToggle.checked = localStorage.getItem('notif-enabled') !== 'false';
         notifToggle.addEventListener('change', (e) => {
             localStorage.setItem('notif-enabled', e.target.checked);
+        }); // <-- Il manquait cette fermeture !
+
+        // 2. Initialisation du toggle des sons
+        const soundToggle = document.getElementById('sound-toggle');
+        soundToggle.checked = localStorage.getItem('sound-enabled') !== 'false';
+        soundToggle.addEventListener('change', (e) => {
+            localStorage.setItem('sound-enabled', e.target.checked);
+        }); // <-- Il manquait cette fermeture !
+
+        // 3. Initialisation de EasyMDE
+        easyMDE = new EasyMDE({ 
+            element: document.getElementById('my-editor'),
+            spellChecker: false, 
+            autofocus: true, 
+            forceSync: true,
+            styleActiveLine: true,
+            toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "preview", "|", "guide"]
         });
 
         easyMDE = new EasyMDE({ 
@@ -512,7 +594,11 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             }
         });
 
-        document.addEventListener('click', () => document.getElementById('ctx-menu').style.display = 'none');
+        document.addEventListener('click', () => {
+    const m = document.getElementById('ctx-menu');
+    m.style.display = 'none';
+    m.classList.remove('animate'); // On nettoie pour la prochaine fois
+});
         
         document.getElementById('ctx-delete').addEventListener('click', async (ev) => {
             ev.stopPropagation();
@@ -528,6 +614,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                     showNotif('notif_deleted');
                     renderTree();
                 } catch (e) { showNotif('notif_delete_err'); }
+                document.addEventListener('click', () => playBuffer(clickSound));
             }
         });
 
@@ -554,6 +641,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                         showNotif('notif_renamed');
                         renderTree();
                     } catch (e) { showNotif('notif_rename_err'); }
+                    document.addEventListener('click', () => playBuffer(clickSound));
                 }
             }
         });
@@ -667,14 +755,26 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             const currentPath = path + "/" + e.name;
             
             d.oncontextmenu = (ev) => {
-                ev.preventDefault();
-                ev.stopPropagation();
-                ctxTarget = { parent: h, handle: e, name: e.name, kind: e.kind };
-                const m = document.getElementById('ctx-menu');
-                m.style.left = ev.pageX + 'px';
-                m.style.top = ev.pageY + 'px';
-                m.style.display = 'block';
-            };
+    ev.preventDefault();
+    ev.stopPropagation();
+    
+    ctxTarget = { parent: h, handle: e, name: e.name, kind: e.kind };
+    const m = document.getElementById('ctx-menu');
+    
+    // Positionnement
+    m.style.left = ev.pageX + 'px';
+    m.style.top = ev.pageY + 'px';
+    
+    // On retire la classe au cas où elle y était déjà pour reset l'anim
+    m.classList.remove('animate');
+    // Forcer un "reflow" pour que le navigateur voit le retrait de la classe
+    void m.offsetWidth; 
+    
+    // On affiche et on joue le son
+    m.style.display = 'block';
+    m.classList.add('animate');
+    playErrorSound('./sounds/UIOpen1.wav'); // Ou un autre son de ton choix :3
+};
 
             if (e.kind === 'directory') {
                 d.className = "folder";
@@ -779,7 +879,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     }
 
     async function createNewFile() {
-        if (!rootHandle) return showNotif('notif_openaspace');
+        if (!rootHandle) {showNotif('notif_openaspace'); playErrorSound('sounds/UIWarning.wav')}
         let n = prompt("File Name: ");
         if (n) { 
             if (!n.includes('.')) n += '.md';
@@ -788,8 +888,12 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         }
     }
 
-    async function createNewFolder() {
-        if (!rootHandle) return showNotif('notif_openaspace');
+async function createNewFolder() {
+        if (!rootHandle) {
+            playErrorSound('sounds/UIWarning.wav')
+            return showNotif('notif_openaspace');
+        }
+
         const name = prompt("Folder Name:");
         if (name) {
             try {
@@ -798,13 +902,18 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                 showNotif('notif_newfolder');
             } catch (err) {
                 showNotif('err');
+                const errorAudio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
+                errorAudio.play().catch(e => console.log("Audio bloqué", e));
             }
         }
     }
+            
+    
+
 
     async function collapseAllFolders() {
         if (!rootHandle) return;
-
+        playErrorSound('sounds/UIUndo.wav');
         const fillCollapsed = async (handle, path = "") => {
             for await (const entry of handle.values()) {
                 if (entry.kind === 'directory') {
@@ -824,9 +933,19 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         const m = document.getElementById('help-modal');
         const o = document.getElementById('help-overlay');
         const isVisible = m.style.display === 'block';
-        m.style.display = isVisible ? 'none' : 'block';
-        o.style.display = isVisible ? 'none' : 'block';
+
+        if (!isVisible) {
+            playErrorSound('sounds/UIOpen2.wav');
+            m.style.display = 'block';
+            o.style.display = 'block';
+            m.classList.add('modal-boing');
+        } else {
+            playErrorSound('sounds/UiClose.wav');
+            m.style.display = 'none';
+            o.style.display = 'none';
+            m.classList.remove('modal-boing');
     }
+}
 
     document.addEventListener('keydown', e => {
         if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveCurrentFile(); }
@@ -842,36 +961,46 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         const sidebarTouch = document.getElementById("sidebar-touch-button");
         const sidebar = document.getElementById("sidebar");
 
-        if (!sidebar || !sidebarEdge) return;
+       if (!sidebar || !sidebarEdge) return;
 
-        if (sidebarToggle) {
-            sidebarToggle.onclick = () => {
-                document.body.classList.toggle("sidebar-floating");
-            };
+if (sidebarToggle) {
+    sidebarToggle.onclick = () => {
+        document.body.classList.toggle("sidebar-floating");
+        // On joue le son de toggle systématiquement car c'est l'action qui active/désactive le mode
+        playErrorSound('sounds/UICheck.wav');
+    };
+}
+
+function showSidebar() {
+    document.body.classList.remove("sidebar-hidden");
+    // On vérifie si on est en mode floating avant de jouer le son
+    if (document.body.classList.contains("sidebar-floating")) {
+        playErrorSound('sounds/UIDragStart.wav');
+    }
+}
+
+function hideSidebar() {
+    if (document.body.classList.contains("sidebar-floating")) {
+        document.body.classList.add("sidebar-hidden");
+        // Le son ne joue que si on est en mode floating (vu la condition au-dessus)
+        playErrorSound('sounds/UIDragEnd.wav');
+    }
+}
+
+sidebarEdge.addEventListener("mouseenter", showSidebar);
+sidebar.addEventListener("mouseleave", hideSidebar);
+
+if (sidebarTouch) {
+    sidebarTouch.onclick = () => {
+        document.body.classList.toggle("sidebar-hidden");
+        // Optionnel : ajouter un son ici aussi si tu veux un retour tactile
+        if (document.body.classList.contains("sidebar-floating")) {
+            playErrorSound('sounds/UICheck.wav');
         }
-
-        function showSidebar() {
-            document.body.classList.remove("sidebar-hidden");
-        }
-
-        function hideSidebar() {
-            if (document.body.classList.contains("sidebar-floating"))
-                document.body.classList.add("sidebar-hidden");
-        }
-
-        sidebarEdge.addEventListener("mouseenter", showSidebar);
-        sidebar.addEventListener("mouseleave", hideSidebar);
-
-        if (sidebarTouch) {
-            sidebarTouch.onclick = () => {
-                document.body.classList.toggle("sidebar-hidden");
-            };
-        }
+    };
+}
     });
 
-    // ===========================
-    // LANGUE
-    // ===========================
     document.addEventListener('DOMContentLoaded', () => {
         const languageSelect = document.getElementById('language-select');
 
@@ -887,6 +1016,11 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             localStorage.setItem('selectedLanguage', selectedLanguage);
         });
     });
+
+
+
+
+
 
 </script>
 </body>
