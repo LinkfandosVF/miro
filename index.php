@@ -36,6 +36,7 @@
     border-width: 1px; 
     max-height: 80vh;
     overflow-y: auto; 
+    backdrop-filter: blur(8px);
 }
 #help-modal::-webkit-scrollbar {
     width: 6px;
@@ -62,20 +63,19 @@
         body.theme-dark #help-modal { background: #252526; color: #d4d4d4; border-color: #444; }
         body.theme-dark #ctx-menu { background: #252526; border-color: #444; }
         body.theme-dark #ctx-menu div { color: #d4d4d4; }
-        #splash { position: fixed; top:0; left:0; width:100%; height:100%; background: #1e1e1e; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+        #splash {backdrop-filter: blur(8px);position: fixed; top:0; left:0; width:100%; height:100%; background: #1e1e1e; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
         .logo-splash { width: 200px; object-fit: contain; margin-bottom: 20px; animation: boing 2.5s infinite ease-in-out; }
         #sidebar { width: 300px; display: flex; flex-direction: column; justify-content: space-between; z-index: 10; }
         .sidebar-brand { padding: 15px; font-size: 1.1rem; font-weight: bold; color: #007acc; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; align-items: center; gap: 10px; }
         .sidebar-header { padding: 15px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; flex-direction: column; gap: 8px; }
         #file-tree {flex-grow: 1; overflow-y: auto !important;min-height: 0;padding: 10px;}
-       .sidebar-footer {flex-shrink: 0;padding: 12px;display: flex;justify-content: space-between;align-items: center;border-top: 1px solid rgba(128,128,128,0.2);
-}
+       .sidebar-footer {flex-shrink: 0;padding: 12px;display: flex;justify-content: space-between;align-items: center;border-top: 1px solid rgba(128,128,128,0.2);}
         .github-link a { color: inherit; opacity: 0.7; text-decoration: none; font-size: 12px; transition: opacity 0.2s; display: flex; align-items: center; gap: 5px; }
         .github-link a:hover { opacity: 1; }
         .help-btn { background: #007acc; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; font-weight: bold; }
         #sidebar-mode-toggle { background: #007acc; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; font-weight: bold; }
         #help-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 25px; border-radius: 8px; z-index: 10000; width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border-style: solid; border-width: 1px; }
-        #help-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 9999; }
+        #help-overlay {backdrop-filter: blur(8px);display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 9999; }
         #restore-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index: 10003; align-items: center; justify-content: center; }
         #restore-overlay.show { display: flex; }
         #restore-modal { background: #252526; color: #d4d4d4; border: 1px solid #444; border-radius: 12px; padding: 30px; width: 340px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
