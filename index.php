@@ -252,11 +252,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     }
 
 }
-
-
-
-
-    </style>
+</style>
 
 
 </head>
@@ -541,15 +537,6 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         }); // <-- Il manquait cette fermeture !
 
         // 3. Initialisation de EasyMDE
-        easyMDE = new EasyMDE({ 
-            element: document.getElementById('my-editor'),
-            spellChecker: false, 
-            autofocus: true, 
-            forceSync: true,
-            styleActiveLine: true,
-            toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "preview", "|", "guide"]
-        });
-
         easyMDE = new EasyMDE({ 
             element: document.getElementById('my-editor'),
             spellChecker: false, 
