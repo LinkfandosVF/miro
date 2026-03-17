@@ -109,8 +109,19 @@
     70% { transform: scale(1.05); opacity: 1; }
     100% { transform: scale(1); opacity: 1; }
 }
+@keyframes boing-scale { 
+    0% { transform: scale(0.5); opacity: 0; } 
+    70% { transform: scale(1.05); opacity: 1; } 
+    100% { transform: scale(1); opacity: 1; } 
+}
+
+
 .modal-boing {
     animation: boing-centered 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.music-boing {
+    animation: boing-scale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes boing-centered { 
     0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } 
@@ -252,6 +263,96 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     }
 
 }
+
+
+
+
+
+
+/* the music bar thing */
+
+.musicbar {
+        display: flex; align-items: center; gap: 12px; padding: 10px 16px;
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 50px; backdrop-filter: blur(20px);
+        min-width: 500PX; max-width: 60vw; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        flex-shrink: 1;
+    }
+
+    /* Mode flottant : la musicbar redevient un blob fixed centré en haut */
+    body.sidebar-floating .musicbar {
+        position: fixed;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1001;
+        min-width: 500px;
+        max-width: 90vw;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+    .track-info { flex: 1; min-width: 0; position: relative; height: 40px; display: flex; align-items: center; overflow: hidden; }
+    .track-title-view, .track-controls-view {
+        position: absolute; width: 100%; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex; flex-direction: column; justify-content: center;
+    }
+    .track-controls-view { opacity: 0; transform: translateY(20px); pointer-events: none; flex-direction: row; align-items: center; gap: 8px; }
+    .musicbar:hover .track-title-view { opacity: 0; transform: translateY(-20px); }
+    .musicbar:hover .track-controls-view { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .track-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+    .track-index { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+    .slider-box { flex: 1; display: flex; align-items: center; gap: 8px; }
+    input[type=range] { flex: 1; height: 4px; cursor: pointer; accent-color: #4a7cf7; }
+    .time-txt { font-size: 10px; font-family: monospace; opacity: 0.7; min-width: 32px; }
+    .mode-btn { background: none; border: none; color: white; opacity: 0.5; cursor: pointer; font-size: 12px; }
+    .mode-btn:hover { opacity: 1; }
+    .musicbar-btn { background: none; border: none; color: rgba(255,255,255,0.8); cursor: pointer; font-size: 18px; padding: 4px 6px; border-radius: 6px; transition: 0.2s; line-height: 1; }
+    .musicbar-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .musicbar-btn:disabled { opacity: 0.2; cursor: default; }
+    .musicbar-btn.settings { font-size: 14px; border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; }
+
+    /* Musicbar — thème clair */
+    body.theme-light .musicbar {
+        background: rgba(0,0,0,0.06);
+        border-color: rgba(0,0,0,0.12);
+    }
+    body.theme-light .track-title { color: #1e1e1e; }
+    body.theme-light .track-index { color: rgba(0,0,0,0.45); }
+    body.theme-light .time-txt { color: #1e1e1e; }
+    body.theme-light .mode-btn { color: #1e1e1e; }
+    body.theme-light .musicbar-btn { color: rgba(0,0,0,0.75); }
+    body.theme-light .musicbar-btn:hover { color: #1e1e1e; background: rgba(0,0,0,0.08); }
+    body.theme-light .musicbar-btn.settings { border-color: rgba(0,0,0,0.2); }
+
+    /* Thèmes custom : mix-blend-mode comme fallback si le thème ne définit pas les couleurs */
+    body.theme-custom .musicbar {
+        background: rgba(128,128,128,0.15);
+        border-color: rgba(128,128,128,0.2);
+    }
+    body.theme-custom .track-title,
+    body.theme-custom .track-index,
+    body.theme-custom .time-txt,
+    body.theme-custom .mode-btn,
+    body.theme-custom .musicbar-btn {
+        color: inherit;
+    }
+
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); justify-content: center; align-items: center; z-index: 2000; }
+    .overlay.active { display: flex; }
+    .musicpopup-card { background: #16213e; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; width: 420px; max-width: 95vw; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; }
+    .musicpopup-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; }
+    .musicpopup-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
+    .url-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .url-input { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 9px; color: white; outline: none; }
+    .load-btn { background: #4a7cf7; border: none; border-radius: 8px; color: white; padding: 9px 16px; font-weight: 600; cursor: pointer; }
+    .playlist-section { display: none; margin-top: 10px; }
+    .playlist-section.visible { display: block; }
+    .playlist-item { display: flex; align-items: center; gap: 10px; padding: 9px; border-radius: 8px; cursor: pointer; border: none; background: none; color: rgba(255,255,255,0.7); font-size: 13px; width: 100%; text-align: left; }
+    .playlist-item:hover { background: rgba(255,255,255,0.07); color: white; }
+    .playlist-item.active { background: rgba(74,124,247,0.2); color: #7eaaff; }
+    .item-index { font-size: 11px; opacity: 0.4; min-width: 20px; }
+
 </style>
 
 
@@ -264,6 +365,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     <div id="splash-title" style="color: white; font-weight: bold; letter-spacing: 1px;">INITIALISATION...</div>
     <div id="splash-subtitle" style="color: #888; margin-top: 10px; font-style: italic;">Bon retour parmi nous...</div>
 </div>
+<div id="player-wrap" style="display:none"><div id="youtube-player"></div></div>
 
 <div id="help-overlay" onclick="toggleHelp()"></div>
 <div id="help-modal">
@@ -288,6 +390,13 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         <p style="margin-left: 8px;" data-i18n="soundtoggle">Sons</p>
     </label>
     <p data-i18n="soundtooltip" style="font-size: 11px">tooltip3</p>
+    <label style="font-size: 15px; cursor:pointer; align-items: center; display: flex;">
+    <input type="checkbox" id="music-hide-toggle">
+    <p style="margin-left: 8px;" data-i18n="disablemusic">Masquer le lecteur musique</p>
+    </label>
+    <p data-i18n="tooltip4" style="font-size: 11px">tooltip4</p>
+<br>
+    
     <br>
     <br>
     <p data-i18n="themes" style="font-weight: bold; color:#007acc">themes</p>
@@ -317,6 +426,22 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     </div>
     <button onclick="toggleHelp()" style="width: 100%; margin-top: 10px; background: #007acc; color: white;">Let's Boogie!</button>
     <p style="font-size: 11px; text-align: center" data-i18n="madewithlove">Fait avec amour par aalllaaasss & friends...</p>
+</div>
+
+<div id="musicpopupOverlay" class="overlay">
+    <div class="musicpopup-card">
+        <div class="musicpopup-header"><h2  data-i18n="music">Lecteur YouTube</h2><button class="musicbar-btn" onclick="togglemusicpopup()">&#x2715;</button></div>
+        <div class="musicpopup-body">
+            <div class="url-row">
+                <input class="url-input" type="text" id="yt-url" placeholder="URL vidéo ou playlist...">
+                <button class="load-btn" onclick="loadMedia()">Yo!</button>
+            </div>
+            <div class="playlist-section" id="playlist-section">
+                <div style="font-size:11px; opacity:0.4; margin-bottom:10px; text-transform:uppercase;">Playlist</div>
+                <div id="playlist-list"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="restore-overlay">
@@ -367,6 +492,34 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     <div>
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:10px;">
         <span id="current-filename" style="opacity: 0.6; font-size: 14px;">📍 No file to save to.</span>
+        <div class="musicbar">
+    <button class="musicbar-btn" id="btn-prev" onclick="prevTrack()" disabled>&#9198;</button>
+    <button class="musicbar-btn" id="btn-playpause" onclick="playPause()">&#9654;</button>
+    <button class="musicbar-btn" id="btn-next" onclick="nextTrack()" disabled>&#9197;</button>
+    
+    <div class="track-info">
+        <div class="track-title-view">
+            <div class="track-title" id="track-title"  data-i18n="nomedia">No media</div>
+            <div class="track-index" id="track-index"></div>
+        </div>
+
+        <div class="track-controls-view">
+            <div class="slider-box" id="box-time">
+                <span class="time-txt" id="time-cur">0:00</span>
+                <input type="range" id="progress-musicbar" value="0" min="0" step="1" oninput="seek(this.value)">
+                <span class="time-txt" id="time-total">0:00</span>
+            </div>
+            <div class="slider-box" id="box-vol" style="display:none">
+                <span style="font-size:12px">🔊</span>
+                <input type="range" id="volume-musicbar" value="100" min="0" max="100" oninput="setVolume(this.value)">
+            </div>
+            <button class="mode-btn" id="btn-mode-toggle" onclick="toggleCtrlMode()">&#128266;</button>
+            
+        </div>
+    </div>
+
+    <button class="musicbar-btn settings" onclick="togglemusicpopup()">&#9881;</button>
+</div>
         <div style="display: flex; align-items: center; gap: 15px;">
             <button id="btn-save" onclick="saveCurrentFile()" disabled>💾</button>
         </div>
@@ -414,7 +567,11 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             'notif_move_err': 'Move error',
             'opburry': '⛺︎ Closes folders in space.',
             'notif_restored': 'Space restored.',
-            'soundtooltip' : 'Toggle funny sounds for the app. (They‘re from Animal Crossing.)'
+            'soundtooltip' : 'Toggle funny sounds for the app. (They‘re from Animal Crossing.)',
+            'nomedia' : 'No media loaded.',
+            'music' : 'Music',
+            'disablemusic': 'Hide Music Player',
+            'tooltip4': 'Better on mobile.'
         },
         fr: {
             'settings': 'Réglages',
@@ -449,7 +606,11 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             'notif_rename_dir': 'Impossible de renommer un dossier pour l‘instant... :C',
             'notif_move_err': 'Erreur de déplacement',
             'notif_restored': 'Espace restauré!',
-            'soundtooltip' : 'Active des sons rigolos pour l‘application.. (Ils viennent de Animal Crossing.)'
+            'soundtooltip' : 'Active des sons rigolos pour l‘application.. (Ils viennent de Animal Crossing.)',
+            'nomedia' : 'Pas de média chargé.',
+            'music' : 'Musique',
+            'disablemusic': 'Masquer le lecteur',
+            'tooltip4': 'C‘est mieux sur mobile.',
         }
     };
 
@@ -663,7 +824,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         const link = document.getElementById('theme-link');
         const sLogo = document.getElementById('sidebar-logo');
         const spLogo = document.getElementById('splash-logo');
-        body.classList.remove('theme-light', 'theme-dark');
+        body.classList.remove('theme-light', 'theme-dark', 'theme-custom');
         link.href = "";
         let logoPath = "logos/dark.png";
         if (val === "light") {
@@ -678,7 +839,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             logoPath = isDark ? "logos/dark.png" : "logos/light.png";
         } else {
             link.href = val;
-            body.classList.add('theme-dark');
+            body.classList.add('theme-dark', 'theme-custom');
             logoPath = val.replace('themes/', 'logos/').replace('.css', '.png');
         }
         sLogo.src = logoPath;
@@ -691,6 +852,33 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 
         localStorage.setItem('obsidian-theme', val);
     }
+
+// 1. On récupère les éléments
+const musicHideToggle = document.getElementById('music-hide-toggle');
+const musicBar = document.querySelector('.musicbar');
+
+// 2. Fonction pour appliquer l'état
+const applyMusicVisibility = (isHidden) => {
+    if (musicBar) {
+        // On utilise !important en JS pour être sûr de gagner contre le CSS
+        musicBar.style.setProperty('display', isHidden ? 'none' : 'flex', 'important');
+    }
+};
+
+// 3. Initialisation au chargement
+const isMusicHidden = localStorage.getItem('music-hidden') === 'true';
+if (musicHideToggle) {
+    musicHideToggle.checked = isMusicHidden;
+    applyMusicVisibility(isMusicHidden);
+
+    // 4. L'écouteur de changement
+    musicHideToggle.addEventListener('change', (e) => {
+        const hidden = e.target.checked;
+        localStorage.setItem('music-hidden', hidden);
+        applyMusicVisibility(hidden);
+        playErrorSound('sounds/UICheck.wav');
+    });
+}
 
     // ===========================
     // FICHIERS
@@ -756,12 +944,14 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     m.classList.remove('animate');
     // Forcer un "reflow" pour que le navigateur voit le retrait de la classe
     void m.offsetWidth; 
+
     
     // On affiche et on joue le son
     m.style.display = 'block';
     m.classList.add('animate');
     playErrorSound('./sounds/UIOpen1.wav'); // Ou un autre son de ton choix :3
 };
+
 
             if (e.kind === 'directory') {
                 d.className = "folder";
@@ -1009,6 +1199,195 @@ if (sidebarTouch) {
 
 
 
+</script>
+
+<script>
+var player, isPlaylist = false, playlistData = [], currentIndex = 0, playerReady = false, isLive = false, ctrlMode = 'time';
+var ORIGIN = location.protocol + '//' + location.host;
+
+// API Init
+var tag = document.createElement('script');
+tag.src = 'https://www.youtube.com/iframe_api';
+document.head.appendChild(tag);
+
+function onYouTubeIframeAPIReady() { createPlayer(null, null); }
+
+function createPlayer(videoId, listId) {
+    playerReady = false;
+    if (player && player.destroy) player.destroy();
+    document.getElementById('player-wrap').innerHTML = '<div id="youtube-player"></div>';
+
+    player = new YT.Player('youtube-player', {
+        height: '0', width: '0',
+        playerVars: { origin: ORIGIN, autoplay: 1, enablejsapi: 1 },
+        events: {
+            onReady: (e) => {
+                playerReady = true;
+                if (videoId) e.target.loadVideoById(videoId);
+                else if (listId) {
+                    e.target.loadPlaylist({ list: listId, listType: 'playlist', index: 0 });
+                    waitForPlaylistLoad();
+                }
+            },
+            onStateChange: onPlayerStateChange
+        }
+    });
+}
+
+// --- TES FONCTIONS PLAYLIST REPRISES ---
+function waitForPlaylistLoad() {
+    var iv = setInterval(() => {
+        var list = player.getPlaylist ? player.getPlaylist() : null;
+        if (list && list.length > 0) { clearInterval(iv); buildPlaylistUI(list); }
+    }, 200);
+}
+
+function buildPlaylistUI(videoIds) {
+    playlistData = videoIds.map(id => ({ videoId: id, title: null }));
+    document.getElementById('playlist-section').classList.add('visible');
+    renderPlaylistSkeleton();
+    updateNavButtons();
+
+    videoIds.forEach((id, i) => {
+        fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + id + '&format=json')
+            .then(r => r.json()).then(data => {
+                playlistData[i].title = data.title;
+                updatePlaylistItem(i);
+            }).catch(() => {
+                playlistData[i].title = 'Vidéo ' + (i + 1);
+                updatePlaylistItem(i);
+            });
+    });
+}
+
+function renderPlaylistSkeleton() {
+    var list = document.getElementById('playlist-list');
+    list.innerHTML = '';
+    playlistData.forEach((item, i) => {
+        var el = document.createElement('button');
+        el.className = 'playlist-item' + (i === currentIndex ? ' active' : '');
+        el.id = 'pitem-' + i;
+        el.onclick = () => jumpTo(i);
+        el.innerHTML = `<span class="item-index">${i+1}</span><span class="item-title">${item.title || '...'}</span>`;
+        list.appendChild(el);
+    });
+}
+
+function updatePlaylistItem(i) {
+    var el = document.getElementById('pitem-' + i);
+    if (el) el.querySelector('.item-title').textContent = playlistData[i].title;
+    if (i === currentIndex) document.getElementById('track-title').textContent = playlistData[i].title;
+}
+
+function jumpTo(index) {
+    currentIndex = index;
+    player.playVideoAt(index);
+    updatePlaylistUI();
+}
+
+function updatePlaylistUI() {
+    document.querySelectorAll('.playlist-item').forEach((el, i) => el.classList.toggle('active', i === currentIndex));
+    document.getElementById('track-index').textContent = isPlaylist ? (currentIndex + 1) + ' / ' + playlistData.length : '';
+}
+
+// --- NAVIGATION & CONTROLES ---
+function prevTrack() { if(isPlaylist && playerReady) player.previousVideo(); }
+function nextTrack() { if(isPlaylist && playerReady) player.nextVideo(); }
+
+function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.PLAYING) {
+        isLive = player.getDuration() === 0;
+        isPlaylist = !!player.getPlaylist();
+        
+        if (isPlaylist) {
+            currentIndex = player.getPlaylistIndex();
+            updatePlaylistUI();
+        }
+        
+        // Auto-switch mode Volume si Live
+        if (isLive) {
+            setCtrlMode('volume');
+            document.getElementById('btn-mode-toggle').style.display = 'none';
+        } else {
+            document.getElementById('btn-mode-toggle').style.display = 'block';
+            setCtrlMode(ctrlMode);
+        }
+
+        updateNavButtons();
+        updateMetadata();
+    }
+    document.getElementById('btn-playpause').textContent = (event.data === 1) ? '⏸' : '▶';
+}
+
+function updateMetadata() {
+    var data = player.getVideoData();
+    document.getElementById('track-title').textContent = data.title || (playlistData[currentIndex] ? playlistData[currentIndex].title : "En cours...");
+}
+
+function updateNavButtons() {
+    document.getElementById('btn-prev').disabled = !isPlaylist;
+    document.getElementById('btn-next').disabled = !isPlaylist;
+}
+
+// Logic Sliders
+setInterval(() => {
+    if (playerReady && player.getPlayerState() === 1 && !isLive) {
+        const cur = player.getCurrentTime();
+        const dur = player.getDuration();
+        document.getElementById('progress-musicbar').max = dur;
+        document.getElementById('progress-musicbar').value = cur;
+        document.getElementById('time-cur').textContent = formatTime(cur);
+        document.getElementById('time-total').textContent = formatTime(dur);
+    }
+}, 1000);
+
+function toggleCtrlMode() { setCtrlMode(ctrlMode === 'time' ? 'volume' : 'time'); }
+function setCtrlMode(m) {
+    ctrlMode = m;
+    const isVol = m === 'volume';
+    document.getElementById('box-time').style.display = isVol ? 'none' : 'flex';
+    document.getElementById('box-vol').style.display = isVol ? 'flex' : 'none';
+    document.getElementById('btn-mode-toggle').textContent = isVol ? '⏳' : '🔊';
+}
+
+function formatTime(s) {
+    let m = Math.floor(s / 60);
+    s = Math.floor(s % 60);
+    return m + ":" + (s < 10 ? '0' : '') + s;
+}
+
+function seek(v) { player.seekTo(v); }
+function setVolume(v) { player.setVolume(v); }
+function playPause() { player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo(); }
+function togglemusicpopup() {
+    const overlay = document.getElementById('musicpopupOverlay');
+    const card = overlay.querySelector('.musicpopup-card');
+    const isOpening = !overlay.classList.contains('active');
+
+    if (isOpening) {
+        overlay.style.display = 'flex'; // On force le flex pour le centrage
+        overlay.classList.add('active');
+        card.classList.add('music-boing');
+        playErrorSound('sounds/UIOpen2.wav');
+    } else {
+        overlay.classList.remove('active');
+        overlay.style.display = 'none';
+        card.classList.remove('music-boing');
+        playErrorSound('sounds/UiClose.wav');
+    }
+}
+
+function loadMedia() {
+    var url = document.getElementById('yt-url').value.trim();
+    if (!url) return;
+    var videoRe = /(?:v=|\/be\/|embed\/)([^?&]+)/;
+    var listRe = /[?&]list=([^#&?]+)/;
+    var vid = url.match(videoRe), lid = url.match(listRe);
+    
+    if (lid) { isPlaylist = true; createPlayer(null, lid[1]); }
+    else if (vid) { isPlaylist = false; document.getElementById('playlist-section').classList.remove('visible'); createPlayer(vid[1], null); }
+    togglemusicpopup();
+}
 </script>
 </body>
 </html>

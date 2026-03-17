@@ -12,6 +12,11 @@ button { background: #ff8080 !important; color:#1b261e !important; }
 #sidebar-mode-toggle {background-color: #ffc94c !important;}
 .help-btn {background-color: #fd7cff !important;}
 
+
+body.theme-custom .track-title, body.theme-custom .track-index, body.theme-custom .time-txt, body.theme-custom .mode-btn, body.theme-custom .musicbar-btn {
+    color: rgb(0, 0, 0) !important;
+}
+
 .fa{
     color: #753448;
 } /* It's the text buttons in the editor... */
