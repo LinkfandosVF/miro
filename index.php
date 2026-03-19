@@ -534,8 +534,8 @@ body.theme-light #pomo-edit-modal {
     <p data-i18n="opburry">opburry</p>
     <p data-i18n="cmdclick">Maintenez Contrôle (ou CMD sur mac) et cliquez sur un lien pour l'ouvrir.</p>
     <br>
-    <p>Pomodoro et lecteur:</p>
-    <p>Cliquez sur l'icone à l'extrémité de la barre pour charger un média depuis YouTube. L'icone de son alterne entre la timeline et le volume, tandis que le timer à droite sert de pomodoro. Cliquez sur le temps d'une section pour changer sa durée. L'option "Auto" sert à automatiquement changer de section à la fin de la précédente.</p> 
+    <p data-i18n="pomomusic" style="font-weight: 1000">Pomodoro et lecteur:</p>
+    <p data-i18n="pomomusictip" style="font-size: 15px">Cliquez sur l'icone à l'extrémité de la barre pour charger un média depuis YouTube. L'icone de son alterne entre la timeline et le volume, tandis que le timer à droite sert de pomodoro. Cliquez sur le temps d'une section pour changer sa durée. L'option "Auto" sert à automatiquement changer de section à la fin de la précédente.</p> 
     <h2 style="margin-top:0; color:#007acc;">---</h2>
     <label style="font-size: 15px; cursor:pointer; opacity: 100%; align-items: center; display: flex;">
         <input type="checkbox" id="autosave-toggle" checked>
@@ -772,6 +772,8 @@ body.theme-light #pomo-edit-modal {
             'tooltip4': 'I understand if it gets annoying over time.',
             'music2' : 'Enter the URL to a Youtube Video, Live or Playlist.',
             'music3' : 'IW: Because of DRM issues, some content cannot be played outside of Youtube.',
+            'pomomusictip' : "Click the icon on the edge of the bar to select a media from Youtube. The button changes between timeline and sound, and the timer is a pomodoro. Click on the time of a section to change it's length in minutes. The AUTO toggle allows you to switch to another section when one changes.",
+            'pomomusic' : 'Pomodoro and music player',
         },
         fr: {
             'settings': 'Réglages',
@@ -813,6 +815,8 @@ body.theme-light #pomo-edit-modal {
             'tooltip4': 'Je peux comprendre que ça devienne relou au bout d‘un moment.',
             'music2' : 'Entrez l‘URL d‘une playlist, vidéo ou live youtube.',
             'music3' : 'Note: à cause de problèmes de DRM, certaines musiques ne peuvent être lu en dehors de Youtube.',
+            'pomomusictip' : "Cliquez sur l'icone à l'extrémité de la barre pour charger un média depuis YouTube. L'icone de son alterne entre la timeline et le volume, tandis que le timer à droite sert de pomodoro. Cliquez sur le temps d'une section pour changer sa durée. L'option 'Auto' sert à automatiquement changer de section à la fin de la précédente.",
+            'pomomusic' : 'Pomodoro et lecteur de musique', 
         }
     };
 
