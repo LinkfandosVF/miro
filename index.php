@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <link id="theme-link" rel="stylesheet" href="">
     <style>
-        
+    
         :root { --dynamic-bg: #1e1e1e; }
          @keyframes boing { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
         .fade-out { opacity: 0; transition: opacity 0.8s ease-out; pointer-events: none; }
@@ -119,6 +119,7 @@
 .modal-boing {
     animation: boing-centered 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
 
 .music-boing {
     animation: boing-scale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -275,18 +276,19 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         display: flex; align-items: center; gap: 12px; padding: 10px 16px;
         background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
         border-radius: 50px; backdrop-filter: blur(20px);
-        min-width: 500PX; max-width: 60vw; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        min-width: 620PX; max-width: 60vw; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
         flex-shrink: 1;
     }
 
     /* Mode flottant : la musicbar redevient un blob fixed centré en haut */
     body.sidebar-floating .musicbar {
         position: fixed;
+        cursor: move;
         top: 24px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 1001;
-        min-width: 500px;
+        min-width: 650px;
         max-width: 90vw;
         box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         background: rgba(255,255,255,0.08);
@@ -307,7 +309,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     .time-txt { font-size: 10px; font-family: monospace; opacity: 0.7; min-width: 32px; }
     .mode-btn { background: none; border: none; color: white; opacity: 0.5; cursor: pointer; font-size: 12px; }
     .mode-btn:hover { opacity: 1; }
-    .musicbar-btn { background: none; border: none; color: rgba(255,255,255,0.8); cursor: pointer; font-size: 18px; padding: 4px 6px; border-radius: 6px; transition: 0.2s; line-height: 1; }
+    .musicbar-btn { background: none; border: none; color: rgba(255,255,255,0.8); cursor: pointer; font-size: 18px; padding: 6px 6px; border-radius: 6px; transition: 0.2s; line-height: 1; }
     .musicbar-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
     .musicbar-btn:disabled { opacity: 0.2; cursor: default; }
     .musicbar-btn.settings { font-size: 14px; border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; }
@@ -340,7 +342,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); justify-content: center; align-items: center; z-index: 2000; }
     .overlay.active { display: flex; }
-    .musicpopup-card { background: #16213e; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; width: 420px; max-width: 95vw; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; }
+    .musicpopup-card { background: #16213e; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; width: 420px; max-width: 95vw; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; color: white;}
     .musicpopup-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; }
     .musicpopup-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
     .url-row { display: flex; gap: 8px; margin-bottom: 16px; }
@@ -352,6 +354,163 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     .playlist-item:hover { background: rgba(255,255,255,0.07); color: white; }
     .playlist-item.active { background: rgba(74,124,247,0.2); color: #7eaaff; }
     .item-index { font-size: 11px; opacity: 0.4; min-width: 20px; }
+.pomo-pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-left: 1px solid rgba(128,128,128,0.2);
+    padding-left: 10px;
+    margin-left: 2px;
+}
+.pomo-pill:not(.pomo-hidden) + .musicbar-btn.settings {
+    border-left: none;
+}
+
+.pomo-hidden { display: none !important; }
+
+.pomo-mode-label {
+    font-size: 10px;
+    font-family: monospace;
+    opacity: 0.5;
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: 0.04em;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+}
+.pomo-mode-label:hover { opacity: 1; }
+
+.pomo-time {
+    font-size: 13px;
+    font-family: monospace;
+    font-weight: 500;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.9;
+    padding: 4px 4px;
+    border-radius: 4px;
+    transition: background 0.15s;
+    user-select: none;
+    min-width: 40px;
+    text-align: center;
+}
+.pomo-time:hover { background: rgba(128,128,128,0.15); }
+
+/* flash quand le timer tourne */
+@keyframes pomo-tick { 0%,100% { opacity: 0.9; } 50% { opacity: 0.45; } }
+.pomo-running .pomo-time { animation: pomo-tick 1s step-end infinite; }
+
+/* toggle auto-avancer : réutilise les couleurs du thème */
+.pomo-auto-label {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    opacity: 0.45;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s;
+}
+.pomo-auto-label:hover { opacity: 0.85; }
+.pomo-auto-label input { display: none; }
+.pomo-auto-track {
+    width: 22px;
+    height: 12px;
+    border: 1px solid currentColor;
+    position: relative;
+    border-radius: 0;
+    transition: background 0.15s;
+}
+.pomo-auto-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    transition: transform 0.15s;
+}
+.pomo-auto-label input:checked ~ .pomo-auto-track .pomo-auto-thumb {
+    transform: translateX(10px);
+}
+.pomo-auto-label input:checked ~ .pomo-auto-track {
+    background: rgba(74,124,247,0.35);
+}
+
+/* modal édition durée — flottant au-dessus de la musicbar */
+#pomo-edit-modal {
+    display: none;
+    position: fixed;
+    bottom: 70px; /* au-dessus de la barre */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #16213e;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 14px 18px;
+    z-index: 2000;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+    min-width: 200px;
+}
+body.theme-light #pomo-edit-modal {
+    background: #f3f3f3;
+    border-color: rgba(0,0,0,0.12);
+    color: #1e1e1e;
+}
+#pomo-edit-modal .pomo-modal-title {
+    font-size: 10px;
+    opacity: 0.5;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-family: monospace;
+}
+#pomo-edit-modal input[type=number] {
+    font-family: monospace;
+    font-size: 32px;
+    font-weight: 300;
+    color: inherit;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid currentColor;
+    width: 100%;
+    outline: none;
+    padding: 2px 0;
+    margin-bottom: 12px;
+    -moz-appearance: textfield;
+}
+#pomo-edit-modal input[type=number]::-webkit-inner-spin-button,
+#pomo-edit-modal input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+#pomo-edit-modal .pomo-modal-btns {
+        color: white !important;
+    display: flex;
+    gap: 8px;
+}
+
+#pomo-edit-modal input[type=number]{
+    color: white !important;
+}
+
+#pomo-edit-modal .pomo-ok {
+    background: #4a7cf7;
+    color: white !important;
+    border: none;
+    font-family: monospace;
+    font-size: 12px;
+    padding: 5px 14px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+#pomo-edit-modal .pomo-cancel {
+    background: none;
+    border: none;
+    font-family: monospace;
+    font-size: 12px;
+    color: white !important;
+    opacity: 0.5;
+    cursor: pointer;
+}
+#pomo-edit-modal .pomo-cancel:hover { opacity: 1; }
 
 </style>
 
@@ -374,6 +533,9 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     <p data-i18n="opfloating"><b>⎋</b> Active le flotteur</p>
     <p data-i18n="opburry">opburry</p>
     <p data-i18n="cmdclick">Maintenez Contrôle (ou CMD sur mac) et cliquez sur un lien pour l'ouvrir.</p>
+    <br>
+    <p>Pomodoro et lecteur:</p>
+    <p>Cliquez sur l'icone à l'extrémité de la barre pour charger un média depuis YouTube. L'icone de son alterne entre la timeline et le volume, tandis que le timer à droite sert de pomodoro. Cliquez sur le temps d'une section pour changer sa durée. L'option "Auto" sert à automatiquement changer de section à la fin de la précédente.</p> 
     <h2 style="margin-top:0; color:#007acc;">---</h2>
     <label style="font-size: 15px; cursor:pointer; opacity: 100%; align-items: center; display: flex;">
         <input type="checkbox" id="autosave-toggle" checked>
@@ -432,7 +594,8 @@ body.sidebar-floating.sidebar-hidden #sidebar {
     <div class="musicpopup-card">
         <div class="musicpopup-header"><h2  data-i18n="music">Lecteur YouTube</h2><button class="musicbar-btn" onclick="togglemusicpopup()">&#x2715;</button></div>
         <div class="musicpopup-body">
-            <div class="url-row">
+        <p data-i18n="music2">Entrez l'URL d'une playlist, vidéo ou live youtube.</p>    
+        <div class="url-row">
                 <input class="url-input" type="text" id="yt-url" placeholder="URL vidéo ou playlist...">
                 <button class="load-btn" onclick="loadMedia()">Yo!</button>
             </div>
@@ -440,6 +603,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
                 <div style="font-size:11px; opacity:0.4; margin-bottom:10px; text-transform:uppercase;">Playlist</div>
                 <div id="playlist-list"></div>
             </div>
+        <p style="font-size: 8px" data-i18n="music3">Note: à cause de problèmes de DRM, certaines musiques ne peuvent être lu en dehors de Youtube.</p>    
         </div>
     </div>
 </div>
@@ -458,6 +622,15 @@ body.sidebar-floating.sidebar-hidden #sidebar {
 <div id="ctx-menu">
     <div id="ctx-rename">✏️ Rename</div>
     <div id="ctx-delete">🗑️ Delete</div>
+</div>
+
+<div id="pomo-edit-modal">
+    <div class="pomo-modal-title" id="pomo-modal-title" style="color: white !important;">WORK — DURÉE (MIN)</div>
+    <input type="number" id="pomo-edit-input" min="1" max="99" value="25">
+    <div class="pomo-modal-btns">
+        <button class="pomo-ok" onclick="pomoSaveEdit()">OK</button>
+        <button class="pomo-cancel" onclick="pomoCloseEdit()">annuler</button>
+    </div>
 </div>
 
 <div id="sidebar">
@@ -518,10 +691,35 @@ body.sidebar-floating.sidebar-hidden #sidebar {
         </div>
     </div>
 
+    <div class="pomo-pill" id="pomo-pill">
+
+    <!-- mode actuel — clic pour cycler work → short → long → work -->
+    <span class="pomo-mode-label" id="pomo-mode-label" onclick="pomoCycleMode()" title="Changer de mode">WORK</span>
+
+    <!-- temps restant — clic pour éditer la durée -->
+    <span class="pomo-time" id="pomo-time" onclick="pomoOpenEdit()" title="Modifier la durée">25:00</span>
+
+    <!-- start / pause -->
+    <button class="musicbar-btn" id="pomo-playpause" onclick="pomoToggle()" title="Démarrer / Pause" style="font-size:14px; padding:2px 5px;">▶</button>
+
+    <!-- reset -->
+    <button class="musicbar-btn" onclick="pomoReset()" title="Reset" style="font-size:12px; padding:2px 4px; opacity:0.5;">↺</button>
+
+    <!-- toggle auto-avancer -->
+    <label class="pomo-auto-label" title="Auto-avancer au mode suivant">
+        <input type="checkbox" id="pomo-auto">
+        <span class="pomo-auto-track"><span class="pomo-auto-thumb"></span></span>
+        auto
+    </label>
+
+</div>
+
     <button class="musicbar-btn settings" onclick="togglemusicpopup()">&#9881;</button>
 </div>
         <div style="display: flex; align-items: center; gap: 15px;">
-            <button id="btn-save" onclick="saveCurrentFile()" disabled>💾</button>
+            <button id="btn-save" onclick="saveCurrentFile()" disabled>
+               ⏏︎
+        </button>
         </div>
     </div>
     <textarea id="my-editor"></textarea>
@@ -552,7 +750,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             'cmdclick': 'Hold Control (or CMD on mac) and click a link to open it.',
             'savenotiftooltip': 'Displays a notification when you save the document.',
             'savenotif': 'Save notification',
-            'notif_saving': 'Saving...',
+            'notif_saving': '⌚︎ Saving...',
             'notif_saved': 'Document saved.',
             'notif_autosaved': 'Document auto-saved.',
             'err': 'ERR: Check JS Console.',
@@ -570,8 +768,10 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             'soundtooltip' : 'Toggle funny sounds for the app. (They‘re from Animal Crossing.)',
             'nomedia' : 'No media loaded.',
             'music' : 'Music',
-            'disablemusic': 'Hide Music Player',
-            'tooltip4': 'Better on mobile.'
+            'disablemusic': 'Hide dynamic bar',
+            'tooltip4': 'I understand if it gets annoying over time.',
+            'music2' : 'Enter the URL to a Youtube Video, Live or Playlist.',
+            'music3' : 'IW: Because of DRM issues, some content cannot be played outside of Youtube.',
         },
         fr: {
             'settings': 'Réglages',
@@ -592,7 +792,7 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             'cmdclick': "Maintenez Contrôle (ou CMD sur mac) et cliquez sur un lien pour l'ouvrir.",
             'savenotiftooltip': 'Vous notifie lorsque le document est sauvegardé.',
             'savenotif': 'Notifications de Sauvegarde',
-            'notif_saving': 'Sauvegarde...',
+            'notif_saving': '⌚︎ Sauvegarde...',
             'notif_saved': 'Document enregistré.',
             'notif_autosaved': 'Document auto-enregistré.',
             'err': 'ERR ❌ - Verifiez la console.',
@@ -609,8 +809,10 @@ body.sidebar-floating.sidebar-hidden #sidebar {
             'soundtooltip' : 'Active des sons rigolos pour l‘application.. (Ils viennent de Animal Crossing.)',
             'nomedia' : 'Pas de média chargé.',
             'music' : 'Musique',
-            'disablemusic': 'Masquer le lecteur',
-            'tooltip4': 'C‘est mieux sur mobile.',
+            'disablemusic': 'Masquer la barre',
+            'tooltip4': 'Je peux comprendre que ça devienne relou au bout d‘un moment.',
+            'music2' : 'Entrez l‘URL d‘une playlist, vidéo ou live youtube.',
+            'music3' : 'Note: à cause de problèmes de DRM, certaines musiques ne peuvent être lu en dehors de Youtube.',
         }
     };
 
@@ -1047,8 +1249,8 @@ if (musicHideToggle) {
             }
             if (!silent) {
                 const b = document.getElementById('btn-save'); 
-                b.innerText = "✨ OK";
-                setTimeout(() => b.innerText = "💾", 1500);
+                b.innerText = "OK";
+                setTimeout(() => b.innerText = "⏏", 1500);
             }
         } catch (err) { 
             showNotif('err'); 
@@ -1142,9 +1344,19 @@ async function createNewFolder() {
 
 if (sidebarToggle) {
     sidebarToggle.onclick = () => {
-        document.body.classList.toggle("sidebar-floating");
-        // On joue le son de toggle systématiquement car c'est l'action qui active/désactive le mode
+        const isFloating = document.body.classList.toggle("sidebar-floating");
         playErrorSound('sounds/UICheck.wav');
+
+        const bar = document.querySelector(".musicbar");
+        if (isFloating) {
+            dragElement(bar);
+        } else {
+            bar.onmousedown = null;
+            bar.style.position = '';
+            bar.style.top = '';
+            bar.style.left = '';
+            bar.style.transform = '';
+        }
     };
 }
 
@@ -1389,5 +1601,240 @@ function loadMedia() {
     togglemusicpopup();
 }
 </script>
+
+<script>
+// ─── Pomodoro ───────────────────────────────────────────
+
+(function() {
+
+    const MODES = ['work', 'short', 'long'];
+    const LABELS = { work: 'WORK', short: 'SHORT BRK', long: 'LONG BRK' };
+    const durations = { work: 25, short: 5, long: 15 };
+    const cycle = ['work', 'short', 'work', 'long']; // ordre auto
+
+    let mode       = 'work';
+    let cycleIdx   = 0;
+    let timeLeft   = durations.work * 60;
+    let totalTime  = timeLeft;
+    let running    = false;
+    let iv         = null;
+
+    const pill        = document.getElementById('pomo-pill');
+    const modeLabel   = document.getElementById('pomo-mode-label');
+    const timeEl      = document.getElementById('pomo-time');
+    const playBtn     = document.getElementById('pomo-playpause');
+    const autoChk     = document.getElementById('pomo-auto');
+    const editModal   = document.getElementById('pomo-edit-modal');
+    const editInput   = document.getElementById('pomo-edit-input');
+    const modalTitle  = document.getElementById('pomo-modal-title');
+
+    function fmt(s) {
+        return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+    }
+
+    function render() {
+        timeEl.textContent  = fmt(timeLeft);
+        modeLabel.textContent = LABELS[mode];
+        playBtn.textContent = running ? '⏸' : '▶';
+        pill.classList.toggle('pomo-running', running);
+    }
+
+    function stop() {
+        clearInterval(iv);
+        running = false;
+    }
+
+
+    function applyMode(m, withReset) {
+        mode = m;
+        if (withReset !== false) {
+            stop();
+            timeLeft  = durations[mode] * 60;
+            totalTime = timeLeft;
+        }
+        render();
+    }
+
+    function nextCycle() {
+        cycleIdx = (cycleIdx + 1) % cycle.length;
+        applyMode(cycle[cycleIdx]);
+    }
+
+    // Exposé globalement pour onclick
+    window.pomoToggle = function() {
+        if (running) {
+            stop();
+        } else {
+            running = true;
+            iv = setInterval(() => {
+                timeLeft--;
+                render();
+                if (timeLeft <= 0) {
+                    stop();
+                    playErrorSound('./sounds/Alarm.mp3');
+                    render();
+                    if (autoChk.checked) {
+                        setTimeout(() => {
+                            nextCycle();
+                            setTimeout(window.pomoToggle, 300);
+                        }, 700);
+                    }
+                }
+            }, 1000);
+        }
+        render();
+    };
+
+    window.pomoReset = function() {
+        stop();
+        timeLeft = durations[mode] * 60;
+        totalTime = timeLeft;
+        render();
+    };
+
+    window.pomoCycleMode = function() {
+        const i = MODES.indexOf(mode);
+        applyMode(MODES[(i + 1) % MODES.length]);
+    };
+
+   window.pomoOpenEdit = function() {
+    editInput.value = durations[mode];
+    modalTitle.textContent = LABELS[mode] + ' — DURÉE (MIN)';
+    editModal.style.display = 'block';
+
+    // boing
+    editModal.classList.remove('modal-boing');
+    void editModal.offsetWidth;
+    editModal.classList.add('modal-boing');
+
+    editInput.focus();
+    editInput.select();
+};
+
+    window.pomoSaveEdit = function() {
+        const v = parseInt(editInput.value);
+        if (v >= 1 && v <= 99) {
+            durations[mode] = v;
+            stop();
+            timeLeft = v * 60;
+            totalTime = timeLeft;
+            render();
+        }
+        editModal.style.display = 'none';
+    };
+
+    window.pomoCloseEdit = function() {
+        editModal.style.display = 'none';
+    };
+
+    // Fermer le modal en cliquant dehors
+    document.addEventListener('click', e => {
+        if (editModal.style.display === 'block'
+            && !editModal.contains(e.target)
+            && e.target !== timeEl) {
+            editModal.style.display = 'none';
+        }
+    });
+
+    editInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter')  window.pomoSaveEdit();
+        if (e.key === 'Escape') window.pomoCloseEdit();
+    });
+
+    // Toggle visibilité via le réglage "Masquer le lecteur musique"
+    // (optionnel — décommenter si tu veux lier ce toggle au pomodoro aussi)
+    // const hideToggle = document.getElementById('music-hide-toggle');
+    // if (hideToggle) hideToggle.addEventListener('change', () => {
+    //     pill.classList.toggle('pomo-hidden', hideToggle.checked);
+    // });
+
+    render();
+
+})();
+
+
+
+
+function dragElement(elmnt) {
+    if (!elmnt) return;
+
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+    elmnt.onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        if (e.target !== elmnt && (
+            e.target.tagName === 'BUTTON' ||
+            e.target.tagName === 'INPUT'  ||
+            e.target.tagName === 'LABEL'  ||
+            (e.target.tagName === 'SPAN' && e.target.classList.contains('pomo-time'))
+        )) return;
+
+        e = e || window.event;
+        e.preventDefault();
+
+        if (!elmnt.style.top) {
+            const rect = elmnt.getBoundingClientRect();
+            elmnt.style.position  = 'fixed';
+            elmnt.style.top       = rect.top  + 'px';
+            elmnt.style.left      = rect.left + 'px';
+            elmnt.style.transform = 'none';
+        }
+
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup   = closeDragElement;
+        document.onmousemove = elementDrag;
+        elmnt.style.transition = 'none';
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+
+        let newTop  = Math.max(0, Math.min(elmnt.offsetTop  - pos2, window.innerHeight - elmnt.offsetHeight));
+        let newLeft = Math.max(0, Math.min(elmnt.offsetLeft - pos1, window.innerWidth  - elmnt.offsetWidth));
+
+        elmnt.style.top  = newTop  + 'px';
+        elmnt.style.left = newLeft + 'px';
+    }
+
+    function closeDragElement() {
+        document.onmouseup   = null;
+        document.onmousemove = null;
+
+        const SNAP_THRESHOLD = 60;
+        const originTop  = 24;
+        const originLeft = (window.innerWidth - elmnt.offsetWidth) / 2;
+
+        const SNAP_ZONES = [
+            { top: originTop,  left: originLeft }, // position d'origine : centré en haut
+            { top: window.innerHeight - elmnt.offsetHeight - 24, left: null }, // bas, libre horizontalement
+        ];
+
+        let snapped = false;
+        for (const zone of SNAP_ZONES) {
+            const dTop  = Math.abs(elmnt.offsetTop - zone.top);
+            const dLeft = zone.left !== null ? Math.abs(elmnt.offsetLeft - zone.left) : 0;
+
+            if (dTop < SNAP_THRESHOLD && (zone.left === null || dLeft < SNAP_THRESHOLD * 2)) {
+                elmnt.style.transition = 'top 0.22s cubic-bezier(0.4,0,0.2,1), left 0.22s cubic-bezier(0.4,0,0.2,1)';
+                elmnt.style.top  = zone.top + 'px';
+                if (zone.left !== null) elmnt.style.left = zone.left + 'px';
+                snapped = true;
+                break;
+            }
+        }
+
+        if (!snapped) elmnt.style.transition = '';
+    }
+}
+
+</script>
+
 </body>
 </html>
