@@ -2,7 +2,9 @@
 ![GitHub commit merge status](https://img.shields.io/github/commit-status/LinkfandosVF/miro/main/721e7360881e10cf5779a02882a6296580473732)![GitHub last commit](https://img.shields.io/github/last-commit/LinkfandosVF/miro)![GitHub Release Date](https://img.shields.io/github/release-date-pre/LinkfandosVF/miro?label=last%20devrelease)![GitHub Release Date](https://img.shields.io/github/release-date/LinkfandosVF/miro?label=last%20public%20release)
 
 
-Cute Markdown note taking app written in php... might compile later when a release drop.
+Cute Markdown note taking app written in php... might compile later when a the one and only single release drop.
+
+When this happens, i'll archive the repo... Cause it's just a test project, a little thing...
 ### Fundamentally,
 Miro is a very simple note taking app written in php with bits of css and js. It's meant to be (maybe) used daily, for work, school, or just writing some personal things!
 Viscerally, i literally made this during my free time only cause i wanted to keep my Apple notes personal n shit.
